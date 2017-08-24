@@ -1,0 +1,229 @@
+/* form starting stylings ------------------------------- */
+.group 			  {
+    position:relative;
+}
+input.md,
+textarea.md,
+select.md {
+    font-size:18px;
+    padding:10px 10px 5px 5px;
+    display:block;
+    /*width:300px;*/
+    width: 100%;
+    border:none;
+    border-bottom:1px solid #757575;
+}
+
+
+select.md {
+    border: 1px solid #ffffff;
+    border-bottom: 1px solid #757575;
+}
+/*
+select.md {
+    font-size:18px;
+    padding:10px 10px 5px 5px;
+    display:block;
+    width: 100%;
+    border:none;
+    border-bottom:1px solid #757575;
+}*/
+
+
+.group.has-error  input.md,
+.group.has-error  select.md
+{
+    color: rgb(169, 68, 66);
+    border-bottom:1px solid rgb(169, 68, 66);
+    /*background: rgb(169, 68, 66);*/
+}
+
+.group.has-error {
+    color: rgb(169, 68, 66);
+    /*background: rgb(169, 68, 66);*/
+}
+
+input.md:focus,
+textarea.md:focus,
+select.md:focus
+{
+    outline:none;
+}
+
+/* LABEL ======================================= */
+label.md 				 {
+    color:#999;
+    font-size:16px;
+    font-weight:normal;
+    position:absolute;
+    pointer-events:none;
+    left:2px;
+    top:20px;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+
+/* active state */
+input.md:focus ~ label.md, input.md:valid ~ label.md,
+textarea.md:focus ~ label.md, textarea.md:valid ~ label.md{
+    top:-8px;
+    font-size:1.3rem;
+    color:#03944F;
+}
+
+.group.has-error label.md,
+.group.has-error input.md:invalid ~ label.md,
+.group.has-error select.md:invalid ~ label.md{
+    color: rgb(169, 68, 66);
+
+}
+
+/* BOTTOM BARS ================================= */
+.bar 	{
+    position:relative;
+    display:block;
+    width: 100%;/*300px;*/
+}
+.bar:before, .bar:after 	{
+    content:'';
+    height:2px;
+    width:0;
+    bottom:1px;
+    position:absolute;
+    background:#03944F;
+    transition:0.2s ease all;
+    -moz-transition:0.2s ease all;
+    -webkit-transition:0.2s ease all;
+}
+
+.group.has-error .bar:before,
+.group.has-error .bar:after {
+    background: rgb(169, 68, 66);
+
+}
+
+
+
+.bar:before {
+    left:50%;
+}
+.bar:after {
+    right:50%;
+}
+
+/* active state */
+input.md:focus ~ .bar:before, input.md:focus ~ .bar:after,
+textarea.md:focus ~ .bar:before, textarea.md:focus ~ .bar:after,
+select.md:focus ~ .bar:before, select.md:focus ~ .bar:after {
+    width:50%;
+}
+
+/* HIGHLIGHTER ================================== */
+.highlight {
+    position:absolute;
+    height:60%;
+    width:100px;
+    top:25%;
+    left:0;
+    pointer-events:none;
+    opacity:0.5;
+}
+
+/* active state */
+input.md:focus ~ .highlight,
+textarea.md:focus ~ .highlight,
+select.md:focus ~ .highlight{
+    -webkit-animation:inputHighlighter 0.3s ease;
+    -moz-animation:inputHighlighter 0.3s ease;
+    animation:inputHighlighter 0.3s ease;
+}
+
+/* ANIMATIONS ================ */
+@-webkit-keyframes inputHighlighter {
+    from { background:#03944F; }
+    to 	{ width:0; background:transparent; }
+}
+@-moz-keyframes inputHighlighter {
+    from { background:#03944F; }
+    to 	{ width:0; background:transparent; }
+}
+@keyframes inputHighlighter {
+    from { background:#03944F; }
+    to 	{ width:0; background:transparent; }
+}
+
+
+
+
+.btn-primary:hover {
+    color: #fff!important;
+    background-color: #038039!important;
+    border-color: #03813c!important;
+}
+/*
+.btn.focus, .btn:focus, .btn:hover {
+    background-color: #038039!important;
+    border-color: #03813c!important;
+    color: #fff!important;
+    text-decoration: none;
+}*/
+
+.btn-primary {
+    background: #036e37!important;
+}
+
+.btn-primary {
+    color: #fff!important;
+    background-color: #036e37!important;
+    border-color: #03813c!important;
+}
+
+.nav-pills>li.active>a, .nav-pills>li.active>a:focus, .nav-pills>li.active>a:hover {
+    color: #fff;
+    background-color: #038039;
+}
+
+/*
+.checkbox {
+    position: relative;
+    top: -0.375rem;
+    margin: 0 1rem 0 0;
+    cursor: pointer;
+}
+
+.checkbox:before {
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+    content: "";
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid #f2f2f2;
+}
+
+.checkbox:checked:before {
+    -webkit-transform: rotate(-45deg);
+    -moz-transform: rotate(-45deg);
+    -ms-transform: rotate(-45deg);
+    -o-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+    height: .5rem;
+    border-color: #009688;
+    border-top-style: none;
+    border-right-style: none;
+}
+
+.checkbox:after {
+    content: "";
+    position: absolute;
+    top: -0.125rem;
+    left: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+    background: #fff;
+    cursor: pointer;
+}*/
