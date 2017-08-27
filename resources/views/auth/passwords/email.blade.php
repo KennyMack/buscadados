@@ -18,6 +18,26 @@
                         {{ csrf_field() }}
 
                         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+                            <div class="col-md-2">&nbsp;</div>
+                            <div class="col-md-8">
+                                <div class="group{{ $errors->has('email') ? ' has-error' : '' }}">
+                                    <input id="email" name="email" class="md" autofocus type="text"
+                                           required
+                                           value="{{ old('email') }}">
+                                    <span class="highlight"></span>
+                                    <span class="bar"></span>
+                                    <label for="email" class="md">E-Mail</label>
+                                    @if ($errors->has('email'))
+                                        <span class="help-block">
+                                            <strong>{{ $errors->first('email') }}</strong>
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+
+
+                    <!--<div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
                             <label for="email" class="col-md-4 control-label">E-Mail</label>
 
                             <div class="col-md-6">
@@ -29,7 +49,7 @@
                                     </span>
                                 @endif
                             </div>
-                        </div>
+                        </div>-->
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
