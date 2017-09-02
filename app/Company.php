@@ -92,6 +92,11 @@ class Company extends Model
         return $this->status == 1;
     }
 
+    public function hasImage()
+    {
+        return $this->imageurl != '';
+    }
+
     public function getImage()
     {
         if ($this->logourl != '')

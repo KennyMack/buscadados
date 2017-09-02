@@ -30,21 +30,82 @@
                                 </div>
                             @endif
 
+                            <input type="hidden" name="deletedImage" id="deletedImage"  />
+
                             @if(Request::is('*/change'))
                                 <input name="_method" type="hidden" value="PUT" />
                             @endif
+                            <div class="col-md-12 col-lg-12" align="center">
+                                <ul id="imageBox"
+                                    class="imageBox">
+                                    @if(count($images) > 0)
+                                        @foreach ($images as $image)
+                                            <li class="item-image"
+                                                id="btn-image-box-{{ $image->id }}">
+                                                <input type="hidden" name="imgdata-0" id="imgdata-{{ $image->id }}"  />
+                                                <label class="btn-image" for="image-{{ $image->id }}">
+                                                    <img src="{{ $image->imageurl  }}" alt="Image preview"
+                                                         class="thumbnail center-thumbnail"
+                                                         id="img-upload-{{ $image->id }}"
+                                                         style="max-width: 180px; max-height: 150px; min-height: 150px;">
+                                                </label>
+                                                <input class="inputfile"
+                                                       onchange="imageInputFile({{ $image->id }})"
+                                                       type="file" id="image-{{ $image->id }}" name="image-{{ $image->id }}">
+                                                <button class="btn btn-danger btn-xs"
+                                                        style="margin-top: 5px"
+                                                        id="btnRemove"
+                                                        onclick="removeItem({{ $image->id }}); return false;"
+                                                        type="button"
+                                                        data-index-image="{{ $image->id }}">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </li>
+                                        @endforeach
+                                    @else
+                                        <li class="item-image"
+                                            id="btn-image-box-0">
+                                            <input type="hidden" name="imgdata-0" id="imgdata-0"  />
+                                            <label class="btn-image" for="image-0">
+                                                <img src="{{ asset('/assets/img/category-no-image.png')  }}" alt="Image preview"
+                                                     class="thumbnail center-thumbnail"
+                                                     id="img-upload-0"
+                                                     style="max-width: 180px; max-height: 150px; min-height: 150px;">
+                                            </label>
+                                            <input class="inputfile"
+                                                   onchange="imageInputFile(0)"
+                                                   type="file" id="image-0" name="image-0">
+                                            <button class="btn btn-danger btn-xs"
+                                                    style="margin-top: 5px"
+                                                    id="btnRemove"
+                                                    onclick="removeItem(0); return false;"
+                                                    type="button"
+                                                    data-index-image="0">
+                                                <span class="glyphicon glyphicon-trash"></span>
+                                            </button>
+                                        </li>
+                                    @endif
+                                    <li class="item-image add"
+                                        id="btn-add-box">
+                                        <div class="btn-add"
+                                             id="btnAdd">
+                                            <i class="glyphicon glyphicon-plus"></i>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
 
-                            <div class="col-md-2 col-lg-2 " align="center">
+                           <!-- <div class="col-md-2 col-lg-2 " align="center">
                                 <input type="hidden" name="imgdata" id="imgdata"  value="{{ old('imgdata') }}"/>
 
                                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                                     <div class="col-md-4 col-xs-6 col-xs-offset-3 col-md-offset-4 img-container">
                                         <label class="btn-image" for="image">
-                                            <img src="{{ $image  }}"
+                                            <img src="{ $image  }}"
                                                  alt="Image preview"
                                                  class="thumbnail center-thumbnail"
                                                  id="img-upload"
-                                                 style="width: 150px; height: 150px">
+                                                 style="max-width: 180px; max-height: 150px; min-height: 150px;">
                                         </label>
                                         <input class="inputfile" type="file" id="image" name="image">
                                         @if ($errors->has('image'))
@@ -54,10 +115,12 @@
                                         @endif
                                     </div>
                                 </div>
+                            </div>-->
+                            <div class="col-md-12">
+                                &nbsp;
                             </div>
 
-
-                            <div class=" col-md-10 col-lg-10 ">
+                            <div class="col-md-offset-1 col-md-10 col-lg-10 ">
 
                                 <div class="form-group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
                                     <div class="col-md-2">&nbsp;</div>
@@ -258,9 +321,9 @@
                                         </button>
                                     </div>
                                 </div>
+                                <p class="help-block">* Campos obrigatórios</p>
                             </div>
 
-                            <p class="help-block">* Campos obrigatórios</p>
                         </form>
                         <hr>
                         <section class="col-xs-12 col-sm-12 col-md-12">
@@ -268,7 +331,7 @@
                                 <article class="search-result row" >
                                     <div class="col-xs-12 col-sm-3 col-md-3" style="padding-top: 20px">
                                         <a href="#" title="Lorem ipsum" class="grid-thumb thumbnail">
-                                            <img src="{{  $category->getImage() }}" style="width: 120px; height: 120px;" alt="{{ $category->name }}"  />
+                                            <img src="{{  $category->getMainImage() }}" style="min-width: 110px; height: 110px; max-width: 140px;" alt="{{ $category->name }}"  />
                                         </a>
                                     </div>
                                     <div class="col-xs-12 col-sm-7 col-md-7" style="padding-top: 30px">
@@ -367,6 +430,46 @@
         </div>
     </div>
     <style type="text/css">
+        .imageBox {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: table;
+            float: left;
+        }
+        .item-image {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            padding: 0;
+            margin: 5px;
+            float: left;
+            display: inline-block;
+        }
+
+        .item-image.add {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            height: 160px;
+        }
+
+        .btn-add {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+            vertical-align: middle;
+            cursor: pointer;
+            padding: 15px 18px 15px 18px;
+            margin: 60px 15px 0 15px;
+            border: 1px solid #ddd;
+            border-radius: 35px;
+        }
+
+
         .container-button {
             position:absolute;
             top:0;
@@ -391,7 +494,7 @@
             background-color: #03944F;
         }
         .search-result .grid-thumb {
-            max-width: 120px;
+            max-width: 150px;
             margin-right: auto;
             margin-left: auto;
             border-radius: 0 !important;
@@ -490,9 +593,44 @@
             display: none!important;
         }
     </style>
+    <script type="text/javascript">
+        function removeItem(value) {
+            var imageIndex = value;
+            var deletedImage = $('#deletedImage');
+
+            deletedImage.val(deletedImage.val() + value + '-');
+
+            if (Number(imageIndex) > 0)
+                $('#btn-image-box-' + imageIndex).remove();
+        }
+
+        function imageInputFile(value) {
+            console.log(value);
+            var imgLogo = $('#img-upload-' + value);
+            var txtLogoData = $('#imgdata-' + value);
+            var imgFile = $('#image-' + value);
+            readURL(imgFile[0], imgLogo, txtLogoData);
+        }
+
+        function readURL(input, img, inputData) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function (e) {
+                    img.attr('src', e.target.result);
+                    inputData.val(e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+
+    </script>
 @endsection
 
 @section('import')
+    <script src="{{ asset('js/core/request.core.js') }}"></script>
     <script src="{{ asset('libs/jquery.maskmoney.js') }}"></script>
     <script src="{{ asset('js/forms/validation/validate.js') }}"></script>
     <script src="{{ asset('js/forms/validation/format.js') }}"></script>

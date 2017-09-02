@@ -147,6 +147,9 @@ Route::group(['prefix' => 'register', 'middleware' => ['auth', 'wasenabled']], f
     Route::delete('/category/{id}/remove', 'CompanyController@deleteRegisterCategory');
 
     Route::post('/category/save', 'CompanyController@saveRegisterCategory');
+
+    Route::post('/category/image/{id}/remove', 'CompanyCatImageController@remove');
+
 });
 
 Route::group(['prefix' => 'companies', 'middleware' => ['auth', 'complete']], function () {
@@ -169,6 +172,8 @@ Route::group(['prefix' => 'companies', 'middleware' => ['auth', 'complete']], fu
 
 
     Route::post('/profile/category/save', 'CompanyController@saveProfileCategory');
+
+    Route::post('/category/image/{id}/remove', 'CompanyCatImageController@remove');
 
 
 
