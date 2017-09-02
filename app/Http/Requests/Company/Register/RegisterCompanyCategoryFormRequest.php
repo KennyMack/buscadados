@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Company\Register;
 
 use App\Http\Requests\Request;
+use App\ImageCatTemp;
 use App\Utils\ImageContent;
 
 class RegisterCompanyCategoryFormRequest extends Request
@@ -24,11 +25,20 @@ class RegisterCompanyCategoryFormRequest extends Request
      */
     public function rules()
     {
+        if (count(Request::files) > 0) {
+            foreach (Request::files as $key => $value) {
+                ImageCatTemp::create([
+                    'session_id' => \Session::getId(),
+                    'image' => $value
+                ]);
+            }
+        }
 
-        if (Request::file('image') != null)
+
+        /*if (Request::file('image') != null)
             \Session::flash('image', ImageContent::imageToBase64(Request::file('image'), Request::file('image')->getMimeType()));
         else if (Request::input('imgdata'))
-            \Session::flash('image', Request::input('imgdata'));
+            \Session::flash('image', Request::input('imgdata'));*/
 
         return [
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',

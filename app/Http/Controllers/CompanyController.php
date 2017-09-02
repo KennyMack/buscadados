@@ -11,6 +11,7 @@ use App\Http\Requests\Company\Register\RegisterCategoryFormRequest;
 use App\Http\Requests\Company\Register\RegisterCompanyCategoryFormRequest;
 use App\Http\Requests\Company\Register\RegisterCompanyFormRequest;
 use App\Http\Requests\CreateCompanyCategoryFormRequest;
+use App\Models\CompanyCatImageModel;
 use App\User;
 use App\Utils\ImageContent;
 use App\Utils\SendMail;
@@ -160,6 +161,8 @@ class CompanyController extends Controller
             'url' => url('companies/profile/category/add'),
             'images' => [],
             'tabuser' => false,
+            'i' => 1,
+            'imgtemp' => CompanyCatImageModel::getTempImages($company->id, 0),
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),
@@ -168,7 +171,6 @@ class CompanyController extends Controller
 
     public function changeProfileCategory($idCompanyCategory, RegisterCompanyCategoryFormRequest $request)
     {
-
         $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 
         $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
@@ -195,108 +197,23 @@ class CompanyController extends Controller
         $companyCategory->isactive = $request->isactive;
 
         $companyCategory->save();
-
-        foreach($request->files as $key => $value)
-        {
-            $keydata = explode('-', $key)[1];
-            if ($request->input('imgdata-'.$keydata) != null) {
-
-                //dd($request->input('imgdata-'.$keydata));
-
-
-                $imgData = $request->input('imgdata-'.$keydata);
-
-                //$fil .= $key . '  = ' . $request->input('imgdata-' . $key) . '\n';
-
-                $time = uniqid();
-                $imgname = uniqid();
-
-                $imgpath = public_path('images/company/category/') . $time;
-                $imgurl = asset('images/company/category/' . $time);
-
-                if (!is_dir($imgpath)) {
-                    mkdir($imgpath, 0777, true);
-                }
-
-                $imgOrigPath = ImageContent::saveImageFromBase64($imgpath . '/',$imgData, $imgname);
-
-                $extension = explode('.', $imgOrigPath)[1];
-
-                $imgOrigUrl = $imgurl . '/' . $imgname . '.' . $extension;
-
-                $catimage = new CompanyCatImage();
-                $catimage->company_id = $company->id;
-                $catimage->company_category_id = $idCompanyCategory;
-                $catimage->imagepath = $imgOrigPath;
-                $catimage->imageurl = $imgOrigUrl;
-
-                $catimage->save();
-
-            }
+        if (count($request->input('imgdata') ) >0) {
+            CompanyCatImageModel::saveImagesCategory(
+                $request->input('imgdata'),
+                $company->id,
+                $idCompanyCategory
+            );
         }
 
         $deletedImages = explode('-', $request->input('deletedImage'));
 
-        foreach ($deletedImages as $id)
-        {
-            $catImg = CompanyCatImage::find($id);
-            if ($catImg != null) {
-                if ($catImg->company_category_id == $idCompanyCategory &&
-                    $catImg->company_id == $company->id) {
+        CompanyCatImageModel::deleteImagesCategory(
+            $deletedImages,
+            $company->id,
+            $idCompanyCategory
+        );
 
-
-                        $expfolder = explode('/', $catImg->imagepath);
-                        $filefolder = implode('/', array_slice($expfolder, 0, count($expfolder) - 1));
-
-                       // dd($catImg->imagepath . ' | '. $filefolder );
-
-                        \File::delete($catImg->imagepath);
-                        \File::deleteDirectory($filefolder);
-
-
-                    $catImg->delete();
-                }
-            }
-        }
-
-
-
-
-        /*if ($request->input('imgdata') != null) {
-
-            if ($companyCategory->imagepath != '') {
-                $expfolder = explode('\\', $companyCategory->imagepath);
-                $filefolder = implode('\\', array_slice($expfolder , 0, count($expfolder) -1));
-
-                \File::delete($companyCategory->imagepath);
-                \File::deleteDirectory($filefolder);
-
-            }
-
-            $time = time();
-            $imgname = uniqid();
-
-            $imgpath = public_path('images/company/category/') . $time;
-            $imgurl = asset('images/company/category/' . $time);
-
-
-            if (!is_dir($imgpath)) {
-                mkdir($imgpath, 0777, true);
-            }
-
-            $imgOrigPath = ImageContent::saveImageFromBase64($imgpath . '/', $request->input('imgdata'), $imgname);
-
-            $extension = explode('.', $imgOrigPath)[1];
-
-            $imgOrigUrl = $imgurl . '/' . $imgname . '.' . $extension;
-
-
-
-            $companyCategory->imageurl = $imgOrigUrl;
-            $companyCategory->imagepath = $imgOrigPath;
-        }*/
-
-
+        CompanyCatImageModel::clearTempImages();
 
 
         $request->session()->forget('image');
@@ -324,6 +241,8 @@ class CompanyController extends Controller
             'companyCategory' => $companyCategory,
             'url' => url('companies/profile/category/'.$idCompanyCategory.'/update'),
             'tabuser' => false,
+            'i' => 1,
+            'imgtemp' => CompanyCatImageModel::getTempImages($company->id, $idCompanyCategory),
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),

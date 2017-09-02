@@ -30,6 +30,8 @@
                                 </div>
                             @endif
 
+
+
                             <input type="hidden" name="deletedImage" id="deletedImage"  />
 
                             @if(Request::is('*/change'))
@@ -42,7 +44,8 @@
                                         @foreach ($images as $image)
                                             <li class="item-image"
                                                 id="btn-image-box-{{ $image->id }}">
-                                                <input type="hidden" name="imgdata-0" id="imgdata-{{ $image->id }}"  />
+                                                {{  $i += 1 }}
+                                                <input type="hidden" name="imgdata[]" id="imgdata[]"  data-index-image="{{ $image->id }}"/>
                                                 <label class="btn-image" for="image-{{ $image->id }}">
                                                     <img src="{{ $image->imageurl  }}" alt="Image preview"
                                                          class="thumbnail center-thumbnail"
@@ -55,7 +58,7 @@
                                                 <button class="btn btn-danger btn-xs"
                                                         style="margin-top: 5px"
                                                         id="btnRemove"
-                                                        onclick="removeItem({{ $image->id }}); return false;"
+                                                        onclick="removeItem({{ $image->id }}, false); return false;"
                                                         type="button"
                                                         data-index-image="{{ $image->id }}">
                                                     <span class="glyphicon glyphicon-trash"></span>
@@ -65,7 +68,7 @@
                                     @else
                                         <li class="item-image"
                                             id="btn-image-box-0">
-                                            <input type="hidden" name="imgdata-0" id="imgdata-0"  />
+                                            <input type="hidden" name="imgdata[]" id="imgdata[]" data-index-image="0" />
                                             <label class="btn-image" for="image-0">
                                                 <img src="{{ asset('/assets/img/category-no-image.png')  }}" alt="Image preview"
                                                      class="thumbnail center-thumbnail"
@@ -78,13 +81,44 @@
                                             <button class="btn btn-danger btn-xs"
                                                     style="margin-top: 5px"
                                                     id="btnRemove"
-                                                    onclick="removeItem(0); return false;"
+                                                    onclick="removeItem(0, false); return false;"
                                                     type="button"
                                                     data-index-image="0">
                                                 <span class="glyphicon glyphicon-trash"></span>
                                             </button>
                                         </li>
                                     @endif
+                                        @if(count($imgtemp) > 0)
+                                            @foreach ($imgtemp as $image)
+                                                <li class="item-image"
+                                                    id="btn-image-box-{{ $image->id }}">
+                                                    {{  $i += 1 }}
+                                                    <input type="hidden"
+                                                           name="imgdata[]"
+                                                           id="imgdata[]"
+                                                           value="{{ $image->image  }}"
+                                                           data-index-image="{{ $image->id }}"/>
+                                                    <label class="btn-image" for="image-{{ $image->id }}">
+                                                        <img src="{{ $image->image  }}" alt="Image preview"
+                                                             class="thumbnail center-thumbnail"
+                                                             id="img-upload-{{ $image->id }}"
+                                                             style="max-width: 180px; max-height: 150px; min-height: 150px;">
+                                                    </label>
+                                                    <input class="inputfile"
+                                                           onchange="imageInputFile({{ $image->id }})"
+                                                           type="file" id="image-{{ $image->id }}" name="image-{{ $image->id }}">
+                                                    <button class="btn btn-danger btn-xs"
+                                                            style="margin-top: 5px"
+                                                            id="btnRemove"
+                                                            onclick="removeItem({{ $image->id }}, true); return false;"
+                                                            type="button"
+                                                            data-index-image="{{ $image->id }}">
+                                                        <span class="glyphicon glyphicon-trash"></span>
+                                                    </button>
+                                                </li>
+                                            @endforeach
+                                        @endif
+
                                     <li class="item-image add"
                                         id="btn-add-box">
                                         <div class="btn-add"
@@ -594,11 +628,12 @@
         }
     </style>
     <script type="text/javascript">
-        function removeItem(value) {
+        function removeItem(value, isTemp) {
             var imageIndex = value;
             var deletedImage = $('#deletedImage');
 
-            deletedImage.val(deletedImage.val() + value + '-');
+            if (!isTemp)
+                deletedImage.val(deletedImage.val() + value + '-');
 
             if (Number(imageIndex) > 0)
                 $('#btn-image-box-' + imageIndex).remove();
@@ -607,9 +642,17 @@
         function imageInputFile(value) {
             console.log(value);
             var imgLogo = $('#img-upload-' + value);
-            var txtLogoData = $('#imgdata-' + value);
             var imgFile = $('#image-' + value);
-            readURL(imgFile[0], imgLogo, txtLogoData);
+            var imgHiddenFields = $('input[type=hidden][name="imgdata[]"]');
+            var imgHidden = null;
+
+
+            $.each(imgHiddenFields, function() {
+                if (value.toString() === $(this).data('index-image').toString())
+                    imgHidden = $(this);
+            });
+
+            readURL(imgFile[0], imgLogo, imgHidden);
         }
 
         function readURL(input, img, inputData) {
