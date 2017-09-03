@@ -251,7 +251,9 @@
                     @endforeach
                     </section>
                     <div class="row">
-                        {{ $results->links() }}
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                            {{ $results->appends($_GET)->links() }}
+                        </div>
                     </div>
                 </div>
             </div>

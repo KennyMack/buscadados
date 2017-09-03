@@ -2,7 +2,7 @@
 
 (function (window) {
     function isInteger(e) {
-        if (e.keyCode < 48 || e.keyCode > 57){
+        if (e.key < 48 || e.key > 57 || e.key == 'Backspace'){
             e.returnValue = false;
             return false;
         }

@@ -45,14 +45,15 @@
                                     @if($category->isactive == 1)
                                         <div class="col-md-4 col-sm-6" style="margin-top: 10px; box-sizing: border-box;">
                                             <div class="col-md-12" style="height: 210px">
-                                                <img src="{{ $category->getImage() }}"
+                                                <img src="{{ $category->getMainImage() }}"
                                                      alt="{{$category->name}}"
                                                      class="thumbnail"
                                                      id="img-upload"
                                                      style="width: 180px; height: 180px; margin-left: auto;margin-right: auto;">
 
                                             </div>
-                                            <h3><b class="black-text">{{$category->name}}</b></h3>
+                                            <h3><a href="{{ url('search/'.$category->id).'/detail' }}">
+                                                <b class="black-text">{{$category->name}}</b></a></h3>
                                             <p class="black-text" style="height: 100px; overflow-x: auto" >{{$category->description}}</p>
                                             <hr>
                                             <p class="lead"><b>Valor</b><br>

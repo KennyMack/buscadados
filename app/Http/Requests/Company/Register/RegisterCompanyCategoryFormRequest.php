@@ -18,6 +18,15 @@ class RegisterCompanyCategoryFormRequest extends Request
         return true;
     }
 
+    public function messages()
+    {
+        return [
+            'categorydetail_id.min' => 'Selecione a categoria.',
+            'categorydetail_id.required' => 'Selecione a categoria.',
+            'categorydetail_id.integer' => 'Selecione a categoria.'
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,11 +34,20 @@ class RegisterCompanyCategoryFormRequest extends Request
      */
     public function rules()
     {
-        if (count(Request::files) > 0) {
-            foreach (Request::files as $key => $value) {
+        if (count(Request::file()) > 0) {
+            foreach (Request::file() as $value) {
+
+
+                $img_data = file_get_contents($value);
+                $base64 = base64_encode($img_data);
+
+
+                $ing = 'data:image/' . $value->getClientOriginalExtension() . ';base64,' . $base64;
+
+
                 ImageCatTemp::create([
                     'session_id' => \Session::getId(),
-                    'image' => $value
+                    'image' => $ing
                 ]);
             }
         }

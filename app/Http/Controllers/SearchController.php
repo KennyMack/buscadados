@@ -6,6 +6,7 @@ use App\Category;
 use App\CategoryDetail;
 use App\City;
 use App\Company;
+use App\CompanyCategory;
 use App\State;
 use Illuminate\Http\Request;
 
@@ -94,6 +95,19 @@ class SearchController extends Controller
             'company' => $company
         ]);
     }
+
+    public function categoryDetail($idCategory)
+    {
+        $companyCategory = CompanyCategory::findOrFail($idCategory);
+
+        $images = $companyCategory->getAllImages()->get();
+
+        return View('search.search-category-detail', [
+            'companyCategory' => $companyCategory,
+            'images' => $images
+        ]);
+    }
+
 
     private function getCategoriesDetails()
     {

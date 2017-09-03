@@ -30,8 +30,6 @@
                                 </div>
                             @endif
 
-
-
                             <input type="hidden" name="deletedImage" id="deletedImage"  />
 
                             @if(Request::is('*/change'))
@@ -44,7 +42,6 @@
                                         @foreach ($images as $image)
                                             <li class="item-image"
                                                 id="btn-image-box-{{ $image->id }}">
-                                                {{  $i += 1 }}
                                                 <input type="hidden" name="imgdata[]" id="imgdata[]"  data-index-image="{{ $image->id }}"/>
                                                 <label class="btn-image" for="image-{{ $image->id }}">
                                                     <img src="{{ $image->imageurl  }}" alt="Image preview"
@@ -65,7 +62,7 @@
                                                 </button>
                                             </li>
                                         @endforeach
-                                    @else
+                                    @elseif(count($imgtemp) <= 0)
                                         <li class="item-image"
                                             id="btn-image-box-0">
                                             <input type="hidden" name="imgdata[]" id="imgdata[]" data-index-image="0" />
@@ -88,36 +85,35 @@
                                             </button>
                                         </li>
                                     @endif
-                                        @if(count($imgtemp) > 0)
-                                            @foreach ($imgtemp as $image)
-                                                <li class="item-image"
-                                                    id="btn-image-box-{{ $image->id }}">
-                                                    {{  $i += 1 }}
-                                                    <input type="hidden"
-                                                           name="imgdata[]"
-                                                           id="imgdata[]"
-                                                           value="{{ $image->image  }}"
-                                                           data-index-image="{{ $image->id }}"/>
-                                                    <label class="btn-image" for="image-{{ $image->id }}">
-                                                        <img src="{{ $image->image  }}" alt="Image preview"
-                                                             class="thumbnail center-thumbnail"
-                                                             id="img-upload-{{ $image->id }}"
-                                                             style="max-width: 180px; max-height: 150px; min-height: 150px;">
-                                                    </label>
-                                                    <input class="inputfile"
-                                                           onchange="imageInputFile({{ $image->id }})"
-                                                           type="file" id="image-{{ $image->id }}" name="image-{{ $image->id }}">
-                                                    <button class="btn btn-danger btn-xs"
-                                                            style="margin-top: 5px"
-                                                            id="btnRemove"
-                                                            onclick="removeItem({{ $image->id }}, true); return false;"
-                                                            type="button"
-                                                            data-index-image="{{ $image->id }}">
-                                                        <span class="glyphicon glyphicon-trash"></span>
-                                                    </button>
-                                                </li>
-                                            @endforeach
-                                        @endif
+                                    @if(count($imgtemp) > 0)
+                                        @foreach ($imgtemp as $image)
+                                            <li class="item-image"
+                                                id="btn-image-box-{{ $image->id }}">
+                                                <input type="hidden"
+                                                       name="imgdata[]"
+                                                       id="imgdata[]"
+                                                       value="{{ $image->image  }}"
+                                                       data-index-image="{{ $image->id }}"/>
+                                                <label class="btn-image" for="image-{{ $image->id }}">
+                                                    <img src="{{ $image->image  }}" alt="Image preview"
+                                                         class="thumbnail center-thumbnail"
+                                                         id="img-upload-{{ $image->id }}"
+                                                         style="max-width: 180px; max-height: 150px; min-height: 150px;">
+                                                </label>
+                                                <input class="inputfile"
+                                                       onchange="imageInputFile({{ $image->id }})"
+                                                       type="file" id="image-{{ $image->id }}" name="image-{{ $image->id }}">
+                                                <button class="btn btn-danger btn-xs"
+                                                        style="margin-top: 5px"
+                                                        id="btnRemove"
+                                                        onclick="removeItem({{ $image->id }}, true); return false;"
+                                                        type="button"
+                                                        data-index-image="{{ $image->id }}">
+                                                    <span class="glyphicon glyphicon-trash"></span>
+                                                </button>
+                                            </li>
+                                        @endforeach
+                                    @endif
 
                                     <li class="item-image add"
                                         id="btn-add-box">
@@ -130,7 +126,7 @@
                             </div>
 
                            <!-- <div class="col-md-2 col-lg-2 " align="center">
-                                <input type="hidden" name="imgdata" id="imgdata"  value="{{ old('imgdata') }}"/>
+                                <input type="hidden" name="imgdata" id="imgdata"  value="{ old('imgdata') }}"/>
 
                                 <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
                                     <div class="col-md-4 col-xs-6 col-xs-offset-3 col-md-offset-4 img-container">
@@ -349,9 +345,25 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-md-6 col-md-offset-4">
+                                    <div class="col-md-1">
+                                        <a class="btn btn-default"
+                                           @if(Request::is('*/profile/*'))
+                                                href="{{ url('/companies/profile/category')  }}"
+                                           @else
+                                                href="{{ url('/register/category') }}"
+                                           @endif
+
+                                        >
+                                            Novo
+                                        </a>
+                                    </div>
+                                    <div class="col-md-2">
                                         <button type="submit" class="btn btn-primary">
-                                            <i class="glyphicon glyphicon-floppy-disk"></i> Cadastrar Mais
+                                            @if(Request::is('*/change'))
+                                                <i class="glyphicon glyphicon-floppy-disk"></i> Salvar
+                                            @else
+                                                <i class="glyphicon glyphicon-floppy-disk"></i> Cadastrar Mais
+                                            @endif
                                         </button>
                                     </div>
                                 </div>
@@ -364,9 +376,9 @@
                             @foreach($company->companyCategories as $category)
                                 <article class="search-result row" >
                                     <div class="col-xs-12 col-sm-3 col-md-3" style="padding-top: 20px">
-                                        <a href="#" title="Lorem ipsum" class="grid-thumb thumbnail">
-                                            <img src="{{  $category->getMainImage() }}" style="min-width: 110px; height: 110px; max-width: 140px;" alt="{{ $category->name }}"  />
-                                        </a>
+                                        <img src="{{  $category->getMainImage() }}" alt="Image preview"
+                                             class="thumbnail center-thumbnail"
+                                             style="max-width: 140px; max-height: 110px;">
                                     </div>
                                     <div class="col-xs-12 col-sm-7 col-md-7" style="padding-top: 30px">
                                         <h3 ><b class="black-text">{{ ucwords($category->name) }}</b></h3>
@@ -427,7 +439,7 @@
                               action="{{ url('companies/profile/category/save') }}"
                               @else
                               action="{{ url('register/category/save') }}"
-                                @endif
+                              @endif
                         >
 
                             {{ csrf_field() }}
@@ -628,9 +640,45 @@
         }
     </style>
     <script type="text/javascript">
+        $(document).ready( function() {
+            var cbeCategorydetail = $('#categorydetail_id');
+            var txtDetailContent = $('#text-det-value');
+            var txtDetail = $('#text-detail');
+            if (cbeCategorydetail.val() > -1)
+            {
+                var minValue = Number(cbeCategorydetail.find(':selected').data("min-value"));
+                var maxValue = Number(cbeCategorydetail.find(':selected').data("max-value"));
+
+                var min = window.format.formatText(minValue.toFixed(2));
+                var max = window.format.formatText(maxValue.toFixed(2));
+
+                txtDetailContent.empty().append(
+                    min + ' e ' +
+                    max);
+
+                if (cbeCategorydetail.val() > -1){
+                    txtDetail.css({
+                        'opacity': '0',
+                        'display': 'block'
+                    })
+                        .show()
+                        .animate({
+                            opacity: 1
+                        });
+                }
+                else
+                    txtDetail.hide(250);
+
+            }
+            else
+                txtDetail.hide(250);
+        });
+
+
         function removeItem(value, isTemp) {
             var imageIndex = value;
             var deletedImage = $('#deletedImage');
+            var deletedImageTemp = $('#deletedImageTemp');
 
             if (!isTemp)
                 deletedImage.val(deletedImage.val() + value + '-');

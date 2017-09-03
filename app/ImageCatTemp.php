@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class ImageCatTemp extends Model
 {
     protected $fillable = [
-        'company_category_id',
-        'company_id',
+        'session_id',
         'image'
     ];
 

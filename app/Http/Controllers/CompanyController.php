@@ -151,8 +151,6 @@ class CompanyController extends Controller
 
     public function profileCategory()
     {
-        $image = asset('/assets/img/category-no-image.png');
-
 
         $company = Auth::user()->company();
         return view('company.register.category-form', [
@@ -161,8 +159,7 @@ class CompanyController extends Controller
             'url' => url('companies/profile/category/add'),
             'images' => [],
             'tabuser' => false,
-            'i' => 1,
-            'imgtemp' => CompanyCatImageModel::getTempImages($company->id, 0),
+            'imgtemp' => CompanyCatImageModel::getTempImages(),
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),
@@ -216,7 +213,6 @@ class CompanyController extends Controller
         CompanyCatImageModel::clearTempImages();
 
 
-        $request->session()->forget('image');
         return Redirect::to('/companies/profile/category');
     }
 
@@ -224,25 +220,17 @@ class CompanyController extends Controller
     {
         $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 
-        $image = $companyCategory->getImage();
-
-        if (!$companyCategory->hasImage())
-            $image = asset('/assets/img/category-no-image.png');
-
-
 
         $company = Auth::user()->company();
 
         return view('company.register.category-form', [
             'categories' => $this->getCategoriesDetails(),
             'company' => $company,
-            'image' => $image,
             'images'=> $this->getCompanyCategoryImages($idCompanyCategory),
             'companyCategory' => $companyCategory,
             'url' => url('companies/profile/category/'.$idCompanyCategory.'/update'),
             'tabuser' => false,
-            'i' => 1,
-            'imgtemp' => CompanyCatImageModel::getTempImages($company->id, $idCompanyCategory),
+            'imgtemp' => CompanyCatImageModel::getTempImages(),
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),
@@ -261,7 +249,6 @@ class CompanyController extends Controller
 
     public function addProfileCategory(RegisterCompanyCategoryFormRequest $request)
     {
-
         $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
         $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
 
@@ -274,6 +261,7 @@ class CompanyController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+        $company = Auth::user()->company();
 
         $companyCategory = CompanyCategory::create([
             'company_id' => Auth::user()->company()->id,
@@ -286,32 +274,16 @@ class CompanyController extends Controller
             'isactive'=> $request->input('isactive'),
         ]);
 
-        if ($request->input('imgdata') != null) {
-
-            $time = time();
-            $imgname = uniqid();
-
-            $imgpath = public_path('images/company/category/') . $time;
-            $imgurl = asset('images/company/category/' . $time);
-
-
-            if (!is_dir($imgpath)) {
-                // dir doesn't exist, make it
-                mkdir($imgpath, 0777, true);
-            }
-
-            $imgOrigPath = ImageContent::saveImageFromBase64($imgpath . '/', $request->input('imgdata'), $imgname);
-
-            $extension = explode('.', $imgOrigPath)[1];
-
-            $imgOrigUrl = $imgurl . '/' . $imgname . '.' . $extension;
-
-            $companyCategory->imageurl = $imgOrigUrl;
-            $companyCategory->imagepath = $imgOrigPath;
-            $companyCategory->save();
+        if (count($request->input('imgdata') ) > 0) {
+            CompanyCatImageModel::saveImagesCategory(
+                $request->input('imgdata'),
+                $company->id,
+                $companyCategory->id
+            );
         }
 
-        $request->session()->forget('image');
+        CompanyCatImageModel::clearTempImages();
+
         return Redirect::to('/companies/profile/category');
     }
 
@@ -319,7 +291,11 @@ class CompanyController extends Controller
     {
         try {
 
-            /* checks whether company has this category detail */
+            $companyCatImage = CompanyCatImage::where('company_category_id', $idCompanyCategory)->get();
+            foreach ($companyCatImage as $image)
+            {
+                $image->delete();
+            }
 
             $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 
@@ -603,20 +579,15 @@ class CompanyController extends Controller
      */
     public function registerCategory()
     {
-        $image = asset('/assets/img/category-no-image.png');
-
-        if (\Session::has('image')) {
-            $image = \Session::get('image');
-        }
 
         $company = Auth::user()->company();
         return view('company.register.category-form', [
             'categories' => $this->getCategoriesDetails(),
             'company' => $company,
-            'image' => $image,
             'url' => url('register/category/add'),
             'tabuser' => true,
             'images' => [],
+            'imgtemp' => CompanyCatImageModel::getTempImages(),
             'urlcompany' => '#',
             'urladdress' => '#',
             'urlcategory' => '#',
@@ -637,11 +608,11 @@ class CompanyController extends Controller
         return view('company.register.category-form', [
             'categories' => $this->getCategoriesDetails(),
             'company' => $company,
-            'image' => $image,
             'companyCategory' => $companyCategory,
             'images'=> $this->getCompanyCategoryImages($idCompanyCategory),
             'url' => url('register/category/'.$idCompanyCategory.'/update'),
             'tabuser' => true,
+            'imgtemp' => CompanyCatImageModel::getTempImages(),
             'urlcompany' => '#',
             'urladdress' => '#',
             'urlcategory' => '#',
@@ -661,10 +632,11 @@ class CompanyController extends Controller
         ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
 
         if ($validator->fails()) {
-            return redirect('companies/profile/category')
+            return redirect('register/category')
                 ->withErrors($validator)
                 ->withInput();
         }
+        $company = Auth::user()->company();
 
         $companyCategory->categorydetail_id = $request->categorydetail_id;
         $companyCategory->name = $request->name;
@@ -673,45 +645,24 @@ class CompanyController extends Controller
         $companyCategory->isactive = $request->isactive;
 
 
-        if ($request->input('imgdata') != null) {
-
-
-            if ($companyCategory->imagepath != '') {
-                $expfolder = explode('\\', $companyCategory->imagepath);
-                $filefolder = implode('\\', array_slice($expfolder , 0, count($expfolder) -1));
-
-                \File::delete($companyCategory->imagepath);
-                \File::deleteDirectory($filefolder);
-
-            }
-
-            $time = time();
-            $imgname = uniqid();
-
-            $imgpath = public_path('images/company/category/') . $time;
-            $imgurl = asset('images/company/category/' . $time);
-
-
-            if (!is_dir($imgpath)) {
-                mkdir($imgpath, 0777, true);
-            }
-
-            $imgOrigPath = ImageContent::saveImageFromBase64($imgpath . '/', $request->input('imgdata'), $imgname);
-
-            $extension = explode('.', $imgOrigPath)[1];
-
-            $imgOrigUrl = $imgurl . '/' . $imgname . '.' . $extension;
-
-
-
-            $companyCategory->imageurl = $imgOrigUrl;
-            $companyCategory->imagepath = $imgOrigPath;
+        $companyCategory->save();
+        if (count($request->input('imgdata') ) >0) {
+            CompanyCatImageModel::saveImagesCategory(
+                $request->input('imgdata'),
+                $company->id,
+                $idCompanyCategory
+            );
         }
 
-        $companyCategory->save();
+        $deletedImages = explode('-', $request->input('deletedImage'));
 
+        CompanyCatImageModel::deleteImagesCategory(
+            $deletedImages,
+            $company->id,
+            $idCompanyCategory
+        );
 
-        $request->session()->forget('image');
+        CompanyCatImageModel::clearTempImages();
         return Redirect::to('/register/category');
     }
 
@@ -726,10 +677,11 @@ class CompanyController extends Controller
         ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
 
         if ($validator->fails()) {
-            return redirect('companies/profile/category')
+            return redirect('register/category')
                 ->withErrors($validator)
                 ->withInput();
         }
+        $company = Auth::user()->company();
 
         $companyCategory = CompanyCategory::create([
             'company_id' => Auth::user()->company()->id,
@@ -742,32 +694,15 @@ class CompanyController extends Controller
             'isactive'=> $request->input('isactive'),
         ]);
 
-        if ($request->input('imgdata') != null) {
-
-            $time = time();
-            $imgname = uniqid();
-
-            $imgpath = public_path('images/company/category/') . $time;
-            $imgurl = asset('images/company/category/' . $time);
-
-
-            if (!is_dir($imgpath)) {
-                // dir doesn't exist, make it
-                mkdir($imgpath, 0777, true);
-            }
-
-            $imgOrigPath = ImageContent::saveImageFromBase64($imgpath . '/', $request->input('imgdata'), $imgname);
-
-            $extension = explode('.', $imgOrigPath)[1];
-
-            $imgOrigUrl = $imgurl . '/' . $imgname . '.' . $extension;
-
-            $companyCategory->imageurl = $imgOrigUrl;
-            $companyCategory->imagepath = $imgOrigPath;
-            $companyCategory->save();
+        if (count($request->input('imgdata') ) > 0) {
+            CompanyCatImageModel::saveImagesCategory(
+                $request->input('imgdata'),
+                $company->id,
+                $companyCategory->id
+            );
         }
 
-        $request->session()->forget('image');
+        CompanyCatImageModel::clearTempImages();
         return Redirect::to('/register/category');
     }
 
@@ -775,7 +710,11 @@ class CompanyController extends Controller
     {
         try {
 
-            /* checks whether company has this category detail */
+            $companyCatImage = CompanyCatImage::where('company_category_id', $idCompanyCategory)->get();
+            foreach ($companyCatImage as $image)
+            {
+                $image->delete();
+            }
 
             $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 

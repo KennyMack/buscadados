@@ -73,7 +73,9 @@ class CompanyCatImageModel
     {
         $session_id = \Session::getId();
 
-        $images = ImageCatTemp::where('session_id', $session_id);
+
+        $images = ImageCatTemp::where('session_id', $session_id)->get();
+
 
         foreach ($images as $image)
         {
@@ -85,7 +87,7 @@ class CompanyCatImageModel
     {
         $session_id = \Session::getId();
 
-        return ImageCatTemp::where('session_id', $session_id);
+        return ImageCatTemp::where('session_id', $session_id)->get();
     }
 
 }

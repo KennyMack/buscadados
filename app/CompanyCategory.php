@@ -50,4 +50,20 @@ class CompanyCategory extends Model
 
         return asset('/assets/img/no-image.png');
     }
+
+    public function getMainImageId()
+    {
+        $images = $this->hasMany('App\CompanyCatImage', 'company_category_id', 'id');
+
+        if(count($images->orderBy('id')->get()) > 0)
+            return $images->orderBy('id')->get()[0]->id;
+
+        return 0;
+    }
+
+
+    public function getAllImages()
+    {
+        return $this->hasMany('App\CompanyCatImage', 'company_category_id', 'id');
+    }
 }

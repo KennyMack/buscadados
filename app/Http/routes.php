@@ -200,4 +200,5 @@ Route::group(['prefix' => 'companies', 'middleware' => ['auth', 'complete']], fu
 Route::group([ 'middleware' => ['auth', 'complete']], function () {
     Route::get('/search', 'SearchController@index');
     Route::get('/search/{id}', 'SearchController@details');
+    Route::get('/search/{id}/detail', 'SearchController@categoryDetail');
 });

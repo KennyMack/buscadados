@@ -16,6 +16,8 @@ class CreateImageCatTempsTable extends Migration
         Schema::create('image_cat_temps', function (Blueprint $table) {
             $table->increments('id');
             $table->string('session_id', 255);
+            /*$table->string('imagepath', 255);
+            $table->string('imageurl', 255);*/
             $table->timestamps();
         });
 

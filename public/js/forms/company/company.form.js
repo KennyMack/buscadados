@@ -5,13 +5,15 @@
         var txtLogoData = $('#imgdata');
         var imgFile = $('#image');
         var txtCnpjCpf = $('#cnpjcpf');
-        var txtIE = $('#ie');
+        //var txtIE = $('#ie');
 
         imgFile.change(function () {
             window.imageField.readURL(this, imgLogo, txtLogoData);
         });
 
-        txtIE.on('keypress', function (event) {
+        txtCnpjCpf.mask('99.999.999/9999-99');
+
+        /*txtIE.on('keypress', function (event) {
             if(!window.validate.isInArray(event.key,
                 ['0','1','2','3','4','5','6','7','8','9','/', '-', '.'])){
                 event.returnValue = false;
@@ -20,7 +22,7 @@
         });
 
         txtCnpjCpf.on('keypress', function (event) {
-            if(!window.validate.isInteger(event)){
+            if(window.validate.isInteger(event)){
                 event.returnValue = false;
                 return false;
             }
@@ -32,7 +34,7 @@
                 console.log('valido');
             else
                 console.log('invalido');
-        });
+        });*/
     });
 
 }(window));

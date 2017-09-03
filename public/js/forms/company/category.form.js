@@ -18,14 +18,8 @@
 
 
         btnAdd.click(function () {
-            console.log('click');
 
             count = count + 1;
-            console.log(count);
-            /*var field = '<li class="item-image">';
-            field += '<img src="/assets/img/category-no-image.png" alt="Image preview" class="thumbnail center-thumbnail" style="max-width: 180px; max-height: 150px; min-height: 150px;">';
-            field += '<input type="button" value="Remover" class="add" id="btnRemove" />';
-            field += '</li>';*/
 
 
             var field = '<li class="item-image"';
@@ -61,8 +55,6 @@
 
             $(field).insertBefore('ul#imageBox>li:last');
 
-            console.log( imageBox.siblings('li.imageBox'));
-
             //imageBox.insertBefore(field);
 
             // btnAddBox.remove();
@@ -74,7 +66,6 @@
         });
 
         btnRemove.click(function () {
-            console.log('remove');
             var imageIndex = $(this).data('index-image');
 
             if (Number(imageIndex) > 0)
@@ -119,7 +110,7 @@
             showSymbol:false // Exibe/Oculta o símbolo
         });
 
-        txtDetail.hide(250);
+        //txtDetail.hide(250);
     });
 
 }(window));
