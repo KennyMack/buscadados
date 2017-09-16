@@ -24,10 +24,8 @@
         float: left;
     }
     .logo img {
-        width: 100%;
-        height: 100%;
-        max-width: 120px;
-        max-height: 80px;
+        width: 120px;
+        height: 80px;
     }
 
     .header .title {

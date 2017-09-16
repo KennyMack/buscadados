@@ -40,6 +40,8 @@ class RegisterAddressFormRequest extends Request
             'state_id' => 'required|min:0|integer',
             'address' => 'required|min:2|max:255',
             'number' => 'required|max:15',
+            'phone' => 'max:60',
+            'cellphone' => 'max:60',
             'postalnumber' => 'required|min:2|max:15',
             'district' => 'required|min:2|max:60',
         ];

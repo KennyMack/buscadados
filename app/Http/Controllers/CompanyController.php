@@ -54,6 +54,7 @@ class CompanyController extends Controller
 
         $company = Auth::user()->company();
 
+
         if ($company != null && $company->hasImage())
             $image = $company->logourl;
 
@@ -142,6 +143,7 @@ class CompanyController extends Controller
         $company->postalnumber = $request->input('postalnumber');
         $company->district = $request->input('district');
         $company->phone = $request->input('phone');
+        $company->cellphone = $request->input('cellphone');
 
         $company->save();
 
@@ -154,7 +156,8 @@ class CompanyController extends Controller
 
         $company = Auth::user()->company();
         return view('company.register.category-form', [
-            'categories' => $this->getCategoriesDetails(),
+            'categories' => $this->getCategories(),
+            'categoriesdetail' => [],//$this->getCategoriesDetails(),
             'company' => $company,
             'url' => url('companies/profile/category/add'),
             'images' => [],
@@ -179,7 +182,7 @@ class CompanyController extends Controller
         ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
 
         if ($validator->fails()) {
-            return redirect('companies/profile/category')
+            return redirect('companies/profile/category/'.$idCompanyCategory.'/change')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -224,7 +227,8 @@ class CompanyController extends Controller
         $company = Auth::user()->company();
 
         return view('company.register.category-form', [
-            'categories' => $this->getCategoriesDetails(),
+            'categories' => $this->getCategories(),
+            'categoriesdetail' => [],//$this->getCategoriesDetails($companyCategory->id),
             'company' => $company,
             'images'=> $this->getCompanyCategoryImages($idCompanyCategory),
             'companyCategory' => $companyCategory,
@@ -348,33 +352,14 @@ class CompanyController extends Controller
         return State::where('country_id', $country_id)->orderBy('name')->get();
     }
 
-    private function getCities($state_id)
-    {
-        return City::where('state_id', $state_id)->orderBy('name')->get();
-    }
-
     private function getCategories()
     {
-        return Category::orderBy('name')->get();
+        return Category::where('isactive', 1)->orderBy('name')->get();
     }
 
     private function getCompanyCategoryImages($idCompanyCat)
     {
         return CompanyCatImage::where('company_category_id', $idCompanyCat)->get();
-    }
-
-    private function getCategoriesDetails()
-    {
-        return CategoryDetail::join('category as cat', 'cat.id', '=', 'category_details.category_id')
-            ->where('category_details.isactive', 1)
-            ->select('category_details.id',
-                'category_details.name',
-                'cat.name as categoryname',
-                'category_details.minvalue',
-                'category_details.maxvalue')
-            ->orderBy('cat.name')
-            ->orderBy('category_details.name', 'desc')
-            ->get();
     }
 
     public function details($id)
@@ -567,6 +552,7 @@ class CompanyController extends Controller
         $company->postalnumber = $request->input('postalnumber');
         $company->district = $request->input('district');
         $company->phone = $request->input('phone');
+        $company->cellphone = $request->input('cellphone');
 
         $company->save();
 
@@ -582,7 +568,8 @@ class CompanyController extends Controller
 
         $company = Auth::user()->company();
         return view('company.register.category-form', [
-            'categories' => $this->getCategoriesDetails(),
+            'categories' => $this->getCategories(),
+            'categoriesdetail' => [],//$this->getCategoriesDetails(),
             'company' => $company,
             'url' => url('register/category/add'),
             'tabuser' => true,
@@ -598,6 +585,7 @@ class CompanyController extends Controller
     {
         $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 
+
         $image = $companyCategory->getImage();
 
         if (!$companyCategory->hasImage())
@@ -606,7 +594,8 @@ class CompanyController extends Controller
         $company = Auth::user()->company();
 
         return view('company.register.category-form', [
-            'categories' => $this->getCategoriesDetails(),
+            'categories' => $this->getCategories(),
+            'categoriesdetail' => [],//$this->getCategoriesDetails($companyCategory->id),
             'company' => $company,
             'companyCategory' => $companyCategory,
             'images'=> $this->getCompanyCategoryImages($idCompanyCategory),
@@ -632,7 +621,7 @@ class CompanyController extends Controller
         ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
 
         if ($validator->fails()) {
-            return redirect('register/category')
+            return redirect('register/category/'.$idCompanyCategory.'/change')
                 ->withErrors($validator)
                 ->withInput();
         }
@@ -758,6 +747,48 @@ class CompanyController extends Controller
 
 
         return Redirect::to('/home');
+    }
+
+
+    public function adminRemoveCompany($idCompany)
+    {
+        $company = Company::findOrFail($idCompany);
+
+        try {
+
+            $user = User::findOrFail($company->user_id);
+
+            $companyCategories = $company->companyCategories;
+
+
+            foreach($companyCategories as $category)
+            {
+                $companyCatImage = CompanyCatImage::where('company_category_id', $category->id)->get();
+                foreach ($companyCatImage as $image)
+                {
+                    $image->delete();
+                }
+
+                $category->delete();
+            }
+
+
+
+
+            $company->delete();
+
+            $user->delete();
+
+            \Session::flash('message_warning', 'Removido com sucesso');
+
+        } catch (\Exception $e) {
+            $errorCode = $e->errorInfo[1];
+
+            if ($errorCode == 1451) {
+                \Session::flash('message_danger', 'Empresa vinculada a outro cadastro.');
+            }
+        }
+        return Redirect::back();
     }
 
 

@@ -2,6 +2,7 @@
 (function (window) {
     $(document).ready( function() {
         var txtpostalnumber = $('#postalnumber');
+        var txtcellphone = $('#cellphone');
         var txtphone = $('#phone');
 
        /* txtphone.on('keypress', function (event) {
@@ -11,6 +12,8 @@
             }
             return window.format.formatField(this, '(19) 0000#-0000', event);
         });*/
+
+        txtcellphone.mask("(99) 99999-9999");
         txtphone.mask("(99) 9999-9999");
         txtpostalnumber.mask("99999-999");
 

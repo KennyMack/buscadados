@@ -36,7 +36,6 @@ class RegisterCompanyFormRequest extends Request
             'tradingname' => 'required|min:2|max:120',
             'cnpjcpf' => 'required|min:6|max:40',
             'history' => 'max:255',
-            'phone' => 'max:60',
             'ie' => 'max:60',
             'im' => 'max:60',
         ];

@@ -152,6 +152,41 @@
 
                             <div class="col-md-offset-1 col-md-10 col-lg-10 ">
 
+                                <div class="form-group{{ $errors->has('category_id') ? ' has-error' : '' }}">
+                                    <div class="col-md-2">&nbsp;</div>
+                                    <div class="col-md-8">
+                                        <div class="group{{ $errors->has('category_id') ? ' has-error' : '' }}">
+                                            <select class="md"
+                                                    id="category_id"
+                                                    autofocus
+                                                    title="Categoria"
+                                                    name="category_id">
+                                                <option value="-1">Categoria *</option>
+                                                @foreach ($categories as $category)
+                                                    <option
+                                                            value="{{ $category->id }}"
+                                                            @if(old('category_id') == $category->id)
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->categoryDetail->category->id))
+                                                            @if($companyCategory->categoryDetail->category->id  == $category->id)
+                                                            selected="true"
+                                                            @endif
+                                                            @endif
+                                                    >{{ ucwords($category->name) }}</option>
+                                                @endforeach
+                                            </select>
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            @if ($errors->has('category_id'))
+                                                <span class="help-block">
+                                                <strong>{{ $errors->first('category_id') }}</strong>
+                                            </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
+
                                 <div class="form-group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
                                     <div class="col-md-2">&nbsp;</div>
                                     <div class="col-md-8">
@@ -159,10 +194,12 @@
                                             <select class="md"
                                                     id="categorydetail_id"
                                                     autofocus
-                                                    title="Categoria"
+                                                    title="Sub-categoria *"
                                                     name="categorydetail_id">
-                                                <option value="-1">Categoria *</option>
-                                                @foreach ($categories as $category)
+                                                <option data-min-value="0"
+                                                        data-max-value="0"
+                                                        value="-1">Sub-categoria *</option>
+                                                @foreach ($categoriesdetail as $category)
                                                     <option
                                                             value="{{ $category->id }}"
                                                             data-min-value="{{ $category->minvalue }}"
@@ -345,16 +382,14 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <a class="btn btn-default"
                                            @if(Request::is('*/profile/*'))
                                                 href="{{ url('/companies/profile/category')  }}"
                                            @else
                                                 href="{{ url('/register/category') }}"
-                                           @endif
-
-                                        >
-                                            Novo
+                                           @endif>
+                                            Cancelar
                                         </a>
                                     </div>
                                     <div class="col-md-2">
@@ -451,6 +486,9 @@
                                             <i class="glyphicon glyphicon-floppy-disk"></i> Salvar alterações
                                         </button>
                                     @else
+                                        <a href="{{ url('/register/address')  }}" class="btn btn-default">
+                                            <i style="font-size: 1.1rem" class="fa fa-btn fa-chevron-left"></i> Voltar
+                                        </a>
                                         <button type="submit" class="btn btn-primary">
                                             Concluir
                                         </button>
@@ -640,17 +678,23 @@
         }
     </style>
     <script type="text/javascript">
+        var cbeCategory = $('#category_id');
+        var cbeCategorydetail = $('#categorydetail_id');
+        var txtDetail = $('#text-detail');
+
+        var categorydetail_id = '{{ isset($companyCategory->categorydetail_id) ? $companyCategory->categorydetail_id : old('categorydetail_id') }}';
         $(document).ready( function() {
-            var cbeCategorydetail = $('#categorydetail_id');
             var txtDetailContent = $('#text-det-value');
-            var txtDetail = $('#text-detail');
-            if (cbeCategorydetail.val() > -1)
+
+            if (cbeCategorydetail.val() > -1 && cbeCategory.val() > -1 )
             {
                 var minValue = Number(cbeCategorydetail.find(':selected').data("min-value"));
                 var maxValue = Number(cbeCategorydetail.find(':selected').data("max-value"));
 
-                var min = window.format.formatText(minValue.toFixed(2));
-                var max = window.format.formatText(maxValue.toFixed(2));
+                console.log('minValue');
+
+                var min = window.format.formatText(minValue.toFixed(2)) || 0;
+                var max = window.format.formatText(maxValue.toFixed(2)) || 0;
 
                 txtDetailContent.empty().append(
                     min + ' e ' +
@@ -673,7 +717,56 @@
             else
                 txtDetail.hide(250);
         });
+        function clearCategoryDetail(input) {
+            input.empty();
+            input.append('<option data-min-value="0" data-max-value="0" value="-1">Sub-categoria *</option>');
+        }
 
+        function setCategoryDetailById(input, value) {
+            input.val(value).change();
+        }
+
+        cbeCategory.change(function () {
+            console.log('0');
+            if ($(this).val() < 0)
+                txtDetail.hide(250);
+        });
+
+
+        function loadCategoryDetail(cbeSubCategory, idCategory, categorydetail_id) {
+            var uri = '/api/categories/' + idCategory + '/detail';
+
+            if (idCategory > -1) {
+                window.request._get(uri, function (data) {
+                    try {
+                        var subCatJson = data;
+                        cbeSubCategory.empty();
+                        cbeSubCategory.append(new Option('Sub-categoria *', '-1'));
+                        for (var i = 0, items = subCatJson.length; i < items; i++) {
+                            //cbeSubCategory.append(new Option(subCatJson[i].name, subCatJson[i].id));
+                            cbeSubCategory.append('<option data-min-value="' + subCatJson[i].minvalue + '" data-max-value="' +subCatJson[i].maxvalue+ '" value="' + subCatJson[i].id + '">' + subCatJson[i].name + '</option>');
+
+                        }
+
+                        setCategoryDetailById(cbeSubCategory, categorydetail_id || -1);
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+            }
+            else
+                clearCategoryDetail(cbeSubCategory);
+
+        }
+
+        cbeCategory.change(function() {
+            loadCategoryDetail(cbeCategorydetail, cbeCategory.val());
+        });
+
+        console.log(categorydetail_id);
+
+        loadCategoryDetail(cbeCategorydetail, cbeCategory.val(), categorydetail_id);
 
         function removeItem(value, isTemp) {
             var imageIndex = value;

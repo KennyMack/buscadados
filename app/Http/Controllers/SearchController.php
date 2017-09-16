@@ -19,7 +19,7 @@ class SearchController extends Controller
         $results = [];
         $company = new Company();
         $type = $request->input('type');
-        if (isset($type))
+        if (isset($type)) {
             if ($type == 0) {
                 $id_state = $request->input('id_state');
                 $id_city = $request->input('id_city');
@@ -70,6 +70,9 @@ class SearchController extends Controller
                 $name = $request->input('name');
                 $results = $company->search($name);
             }
+
+            $results = $results->where('status', 1);
+        }
         else
             $results = $company->where('status', 99);
 

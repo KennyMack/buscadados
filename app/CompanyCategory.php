@@ -61,9 +61,14 @@ class CompanyCategory extends Model
         return 0;
     }
 
-
     public function getAllImages()
     {
         return $this->hasMany('App\CompanyCatImage', 'company_category_id', 'id');
+    }
+
+    public function categoryDetail()
+    {
+
+        return $this->belongsTo('App\CategoryDetail', 'categorydetail_id');
     }
 }

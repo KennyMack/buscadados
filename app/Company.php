@@ -32,6 +32,7 @@ class Company extends Model
         'logopath',
         'logourl',
         'phone',
+        'cellphone',
         'ie',
         'im',
 
@@ -94,7 +95,7 @@ class Company extends Model
 
     public function hasImage()
     {
-        return $this->imageurl != '';
+        return $this->logourl != '';
     }
 
     public function getImage()

@@ -307,6 +307,27 @@
                                     </div>
                                 </div>
 
+
+
+                                <div class="form-group{{ $errors->has('cellphone') ? ' has-error' : '' }}">
+                                    <div class="col-md-2">&nbsp;</div>
+                                    <div class="col-md-8">
+                                        <div class="group{{ $errors->has('cellphone') ? ' has-error' : '' }}">
+                                            <input id="cellphone" name="cellphone" class="md" type="text" required
+                                                   maxlength="15"
+                                                   value="{{ isset($company->cellphone) ? $company->cellphone : old('cellphone') }}">
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label for="cellphone" class="md">Celular</label>
+                                            @if ($errors->has('cellphone'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('cellphone') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
                             <!--<div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                                 <label for="phone" class="col-md-4 control-label">Telefone</label>
 
@@ -330,6 +351,9 @@
                                             <i class="glyphicon glyphicon-floppy-disk"></i> Salvar alterações
                                         </button>
                                     @else
+                                        <a href="{{ url('/register/company')  }}" class="btn btn-default">
+                                            <i style="font-size: 1.1rem" class="fa fa-btn fa-chevron-left"></i> Voltar
+                                        </a>
                                         <button type="submit" class="btn btn-primary">
                                             Avançar <i style="font-size: 1.1rem" class="fa fa-btn fa-chevron-right"></i>
                                         </button>

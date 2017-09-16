@@ -106,4 +106,9 @@ class CategoryDetailController extends Controller
         return Redirect::to('admin/categories/' . $idCategory . '/detail/create');
 
     }
+
+    public function categoryDetails($category_id)
+    {
+        return \Response::json(CategoryDetail::where('category_id', $category_id)->where('isactive', 1)->orderBy('name', 'asc')->get());
+    }
 }

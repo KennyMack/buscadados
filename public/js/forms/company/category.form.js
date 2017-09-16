@@ -6,6 +6,7 @@
         var txtLogoData = $('#imgdata');
         var imgFile = $('#image');
         var txtValue = $('#value');
+        var cbeCategory = $('#category_id');
         var cbeCategorydetail = $('#categorydetail_id');
         var txtDetail = $('#text-detail');
         var txtDetailContent = $('#text-det-value');
@@ -19,14 +20,16 @@
 
         btnAdd.click(function () {
 
-            count = count + 1;
+            count = ((count + 1) + 9999);
+
+
 
 
             var field = '<li class="item-image"';
             field += 'id="btn-image-box-'+ count +'">';
             field += '<input type="hidden" name="imgdata[]" id="imgdata[]" data-index-image="' + count + '" />';
             field += '<label class="btn-image" for="image-' + count + '">';
-            field += '<img src="/assets/img/category-no-image.png" alt="Image preview"';
+            field += '<img src="' + window.BASE_URL +'/assets/img/category-no-image.png" alt="Image preview"';
             field += 'class="thumbnail center-thumbnail"';
             field += 'id="img-upload-'+ count +'"';
             field += 'style="max-width: 180px; max-height: 150px; min-height: 150px;">';
@@ -76,9 +79,10 @@
             var minValue = Number($(this).find(':selected').data("min-value"));
             var maxValue = Number($(this).find(':selected').data("max-value"));
 
-            var min = window.format.formatText(minValue.toFixed(2));
-            var max = window.format.formatText(maxValue.toFixed(2));
+            var max = window.format.formatText(maxValue.toFixed(2)) || 0;
+            var min = window.format.formatText(minValue.toFixed(2)) || 0;
 
+            console.log('minValue');
             txtDetailContent.empty().append(
                 min + ' e ' +
                 max);

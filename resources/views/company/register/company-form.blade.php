@@ -237,14 +237,18 @@
                                 <div class="col-md-2">&nbsp;</div>
                                 <div class="col-md-8">
                                     <div class="group{{ $errors->has('history') ? ' has-error' : '' }}">
-                                        <textarea rows="8" name="history"  id="history" class="md"  required >{{ isset($company->history) ? $company->history : old('history') }}</textarea>
+                                        <textarea maxlength="255"
+                                                rows="8" name="history" id="history" class="md"  required >{{ isset($company->history) ? $company->history : old('history') }}</textarea>
                                         <span class="highlight"></span>
                                         <span class="bar"></span>
                                         <label for="history" class="md">Historia</label>
+                                        <span class="small help-block pull-right">
+                                             <span id="totcharhistory">0</span>/255 caracteres
+                                        </span>
                                         @if ($errors->has('im'))
                                             <span class="help-block">
-                                            <strong>{{ $errors->first('history') }}</strong>
-                                        </span>
+                                                <strong>{{ $errors->first('history') }}</strong>
+                                            </span>
                                         @endif
                                     </div>
                                 </div>

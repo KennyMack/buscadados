@@ -98,6 +98,10 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('country/{country_id}/states', 'StateController@states');
     Route::get('countries', 'CountryController@countries');
     Route::get('categories', 'CategoryController@index');
+    Route::get('categories/{category_id}/detail', 'CategoryDetailController@categoryDetails');
+
+
+
 
 
 
@@ -109,6 +113,8 @@ Route::group(['prefix' => 'admin/companies', 'middleware' => ['auth', 'admin']],
     Route::post('/{id}/enable', 'CompanyController@enable');
     Route::post('/{id}/disable', 'CompanyController@disable');
     Route::get('/disabled', 'CompanyController@companiesDisabled');
+
+    Route::delete('/{id}/remove', 'CompanyController@adminRemoveCompany');
 
 
     /* get categories detail from category id */
