@@ -35,6 +35,7 @@ class Company extends Model
         'cellphone',
         'ie',
         'im',
+        'site',
 
         'user_id',
         'created_at',

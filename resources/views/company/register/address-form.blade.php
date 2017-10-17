@@ -328,6 +328,25 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group{{ $errors->has('site') ? ' has-error' : '' }}">
+                                    <div class="col-md-2">&nbsp;</div>
+                                    <div class="col-md-8">
+                                        <div class="group{{ $errors->has('site') ? ' has-error' : '' }}">
+                                            <input id="site" name="site" class="md" type="text" required
+                                                   maxlength="60"
+                                                   value="{{ isset($company->site) ? $company->site : old('site') }}">
+                                            <span class="highlight"></span>
+                                            <span class="bar"></span>
+                                            <label for="site" class="md">Site</label>
+                                            @if ($errors->has('site'))
+                                                <span class="help-block">
+                                                    <strong>{{ $errors->first('site') }}</strong>
+                                                </span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+
                             <!--<div class="form-group{{ $errors->has('phone') ? ' has-error' : '' }}">
                                 <label for="phone" class="col-md-4 control-label">Telefone</label>
 
@@ -343,6 +362,8 @@
                                     @endif
                                 </div>
                             </div>-->
+
+
 
                             <div class="form-group">
                                 <div class="col-md-6 col-md-offset-4">

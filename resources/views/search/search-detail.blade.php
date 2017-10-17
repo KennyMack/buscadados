@@ -21,11 +21,28 @@
                                 <h4 class="black-text">{{ ucwords($company->companyname) }}</h4>
                                 <p class="black-text" ><span>{{ $company->cityStateDescription() }}</span></p>
                                 <p class="black-text" ><span>{{ $company->user->email }}</span></p>
+                                <a class="black-text" href="http://{{ $company->site }}" target="_blank"><span>{{ $company->site }}</span></a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
                                 <hr>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <p class="black-text" ><span>{{ ucwords($company->address) }}, {{ ucwords($company->number) }}, {{ ucwords($company->city->name) }} - {{ strtoupper($company->city->state->initials) }}</span></p>
+                               @if($company->phone !== '')
+                                    <p>Fone: {{ $company->phone }}</p>
+                                @endif
+                                @if($company->cellphone !== '')
+                                    <p>Cel.: {{ $company->cellphone }}</p>
+                                @endif
+                            </div>
+                            <div class="col-md-12">
+                                <iframe frameborder="0" style="border:0; width: 100%; min-height: 220px"
+                                    src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBUQRmkZstz6HNkR_3hCm8YADiUZyPACN8&q={{ str_replace(' ',  '+', $company->address) }},{{ $company->number }},{{ str_replace(' ', '+', $company->city->name)  }}+{{ $company->city->state->initials }}" allowfullscreen>
+                                </iframe>
                             </div>
                         </div>
                         <div class="row">
@@ -58,7 +75,7 @@
                                             <hr>
                                             <p class="lead"><b>Valor</b><br>
                                             <b>R$ {{ $category->value }}</b></p>
-                                            <p><a class="btn btn-primary" style="display: block" href="#" role="button">Comprar</a></p>
+                                            <!--<p><a class="btn btn-primary" style="display: block" href="#" role="button">Comprar</a></p>-->
                                         </div>
                                     @endif
                                 @endforeach

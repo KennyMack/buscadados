@@ -144,6 +144,7 @@ class CompanyController extends Controller
         $company->district = $request->input('district');
         $company->phone = $request->input('phone');
         $company->cellphone = $request->input('cellphone');
+        $company->site = $request->input('site');
 
         $company->save();
 
@@ -553,6 +554,7 @@ class CompanyController extends Controller
         $company->district = $request->input('district');
         $company->phone = $request->input('phone');
         $company->cellphone = $request->input('cellphone');
+        $company->site = $request->input('site');
 
         $company->save();
 
