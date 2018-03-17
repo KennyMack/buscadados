@@ -42,7 +42,7 @@ class RegisterAddressFormRequest extends Request
             'number' => 'required|max:15',
             'phone' => 'max:60',
             'cellphone' => 'max:60',
-            'postalnumber' => 'required|min:2|max:15',
+            'postalnumber' => 'required|min:2|max:15|formato_cep',
             'district' => 'required|min:2|max:60',
         ];
     }

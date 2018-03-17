@@ -114,7 +114,7 @@
                                 </div>
                             </div>
 
-                                <!--
+                                <!-- 66.784.659/0001-94
                             <div class="form-group{{ $errors->has('tradingname') ? ' has-error' : '' }}">
                                 <label for="tradingname" class="col-md-4 control-label">Nome Fantasia</label>
 
@@ -130,10 +130,10 @@
                                 </div>
                             </div>-->
 
-                            <div class="form-group{{ $errors->has('cnpjcpf') ? ' has-error' : '' }}">
+                            <div id="divTxtCnpj" class="form-group{{ $errors->has('cnpjcpf') ? ' has-error' : '' }}">
                                 <div class="col-md-2">&nbsp;</div>
                                 <div class="col-md-8">
-                                    <div class="group{{ $errors->has('cnpjcpf') ? ' has-error' : '' }}">
+                                    <div id="divTxtCnpjInput" class="group{{ $errors->has('cnpjcpf') ? ' has-error' : '' }}">
                                         <input id="cnpjcpf" name="cnpjcpf" class="md" type="text" required
                                                maxlength="18"
                                                value="{{ isset($company->cnpjcpf) ? $company->cnpjcpf : old('cnpjcpf') }}">
@@ -145,6 +145,9 @@
                                                 <strong>{{ $errors->first('cnpjcpf') }}</strong>
                                             </span>
                                         @endif
+                                        <span id="helpTxtCnpj" style="display: none" class="help-block">
+                                            <strong>O campo CNPJ não é um CNPJ válido</strong>
+                                        </span>
                                     </div>
                                 </div>
                             </div>
