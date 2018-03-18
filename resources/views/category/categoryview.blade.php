@@ -28,6 +28,10 @@
                                     <th colspan="3"
                                         width="5%">&nbsp;</th>
                                     <th>Descrição</th>
+                                    <th>Ordenação</th>
+                                    <th>Tipo Categoria</th>
+                                    <th>Altera Nome</th>
+                                    <th>Altera Descrição</th>
                                     <th>Ativo</th>
                                 </tr>
                             </thead>
@@ -51,6 +55,22 @@
                                             <a class="btn btn-default btn-xs" href="{{ url('admin/categories/'.$cat->id.'/detail/create' ) }}"><span class="glyphicon glyphicon-eye-open"></span></a>
                                         </td>
                                         <td>{{ ucwords($cat->name) }}</td>
+                                        <td>{{ $cat->orderby }}</td>
+                                        <td>{{ $cat->getTypeDescription() }}</td>
+                                        <td>
+                                            <input type="checkbox"
+                                                   name="readonlyname"
+                                                   disabled="true"
+                                                   {{ $cat->readonlyname == 1 ? 'checked' :'' }}
+                                                   value="{{ $cat->readonlyname }}">
+                                        </td>
+                                        <td>
+                                            <input type="checkbox"
+                                                   name="readonlydescription"
+                                                   disabled="true"
+                                                   {{ $cat->readonlydescription == 1 ? 'checked' :'' }}
+                                                   value="{{ $cat->readonlydescription }}">
+                                        </td>
                                         <td>
                                             <input type="checkbox" 
                                                    name="isactive" 
@@ -64,7 +84,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="6">
+                                    <td colspan="9">
                                         {{ $categories->links() }}                        
                                     </td>
                                 </tr>

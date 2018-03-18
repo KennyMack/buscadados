@@ -25,6 +25,7 @@ class CreateCategoryDetailFormRequest extends Request
     {
         return [
             'name'=> 'required|max:120',
+            'description'=> 'max:255',
             'minvalue' => 'required|numeric',
             'maxvalue' => 'required|numeric',
             'isactive' => 'required|min:0|max:1',

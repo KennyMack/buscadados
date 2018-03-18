@@ -21,9 +21,13 @@ class RegisterCompanyCategoryFormRequest extends Request
     public function messages()
     {
         return [
-            'categorydetail_id.min' => 'Selecione a categoria.',
+            /*'categorydetail_id.min' => 'Selecione a categoria.',
             'categorydetail_id.required' => 'Selecione a categoria.',
-            'categorydetail_id.integer' => 'Selecione a categoria.'
+            'categorydetail_id.integer' => 'Selecione a categoria.',*/
+            'category_id.min' => 'Selecione a categoria.',
+            'category_id.required' => 'Selecione a categoria.',
+            'category_id.integer' => 'Selecione a categoria.'
+
         ];
     }
 
@@ -61,11 +65,13 @@ class RegisterCompanyCategoryFormRequest extends Request
         return [
             'image' => 'image|mimes:jpeg,png,jpg,gif|max:2048',
             'imgdata' => 'min:0',
-            'categorydetail_id' => 'required|min:0|integer',
-            'name'=> 'required|max:120',
-            'description'=> 'required|max:255',
+            'category_id' => 'required|min:0|integer',
+            'contract_index' => 'required|min:-1|integer',
+            //'categorydetail_id' => 'required|min:0|integer',
+            //'name'=> 'required|max:120',
+            //'description'=> 'required|max:255',
             //'value' => 'required|numeric|min:1',
-            'value' => 'required|regex:([0-9]+[.,]?[0-9])|min:1',
+            //'value' => 'required|regex:([0-9]+[.,]?[0-9])|min:0',
             'isactive' => 'required|min:0|max:1',
         ];
     }

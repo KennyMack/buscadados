@@ -125,27 +125,6 @@
                                 </ul>
                             </div>
 
-                           <!-- <div class="col-md-2 col-lg-2 " align="center">
-                                <input type="hidden" name="imgdata" id="imgdata"  value="{ old('imgdata') }}"/>
-
-                                <div class="form-group{{ $errors->has('image') ? ' has-error' : '' }}">
-                                    <div class="col-md-4 col-xs-6 col-xs-offset-3 col-md-offset-4 img-container">
-                                        <label class="btn-image" for="image">
-                                            <img src="{ $image  }}"
-                                                 alt="Image preview"
-                                                 class="thumbnail center-thumbnail"
-                                                 id="img-upload"
-                                                 style="max-width: 180px; max-height: 150px; min-height: 150px;">
-                                        </label>
-                                        <input class="inputfile" type="file" id="image" name="image">
-                                        @if ($errors->has('image'))
-                                            <span class="help-block">
-                                            <strong>{{ $errors->first('image') }}</strong>
-                                        </span>
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>-->
                             <div class="col-md-12">
                                 &nbsp;
                             </div>
@@ -165,10 +144,15 @@
                                                 @foreach ($categories as $category)
                                                     <option
                                                             value="{{ $category->id }}"
+                                                            data-description="{{ $category->description }}"
+                                                            data-name="{{ ucwords($category->name) }}"
+                                                            data-type="{{ $category->type }}"
+                                                            data-readonlyname="{{ $category->readonlyname }}"
+                                                            data-readonlydescription="{{ $category->readonlydescription }}"
                                                             @if(old('category_id') == $category->id)
                                                             selected="true"
-                                                            @elseif(isset($companyCategory->categoryDetail->category->id))
-                                                            @if($companyCategory->categoryDetail->category->id  == $category->id)
+                                                            @elseif(isset($companyCategory->category_id))
+                                                            @if($companyCategory->category_id  == $category->id)
                                                             selected="true"
                                                             @endif
                                                             @endif
@@ -186,182 +170,290 @@
                                     </div>
                                 </div>
 
-
-                                <div class="form-group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
-                                    <div class="col-md-2">&nbsp;</div>
-                                    <div class="col-md-8">
-                                        <div class="group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
-                                            <select class="md"
-                                                    id="categorydetail_id"
-                                                    autofocus
-                                                    title="Sub-categoria *"
-                                                    name="categorydetail_id">
-                                                <option data-min-value="0"
-                                                        data-max-value="0"
-                                                        value="-1">Sub-categoria *</option>
-                                                @foreach ($categoriesdetail as $category)
-                                                    <option
-                                                            value="{{ $category->id }}"
-                                                            data-min-value="{{ $category->minvalue }}"
-                                                            data-max-value="{{ $category->maxvalue }}"
-                                                            @if(old('categorydetail_id') == $category->id)
+                                <div id="fields-contract"
+                                     @if (isset($companyCategory->category_id))
+                                        style="display: {{ $companyCategory->category->type == '1' ? 'block' : 'none'  }}"
+                                     @else
+                                        style="display:none"
+                                     @endif>
+                                    <div class="form-group{{ $errors->has('contract_index') ? ' has-error' : '' }}">
+                                        <div class="col-md-2">&nbsp;</div>
+                                        <div class="col-md-8">
+                                            <div class="group{{ $errors->has('contract_index') ? ' has-error' : '' }}">
+                                                <select class="md"
+                                                        id="contract_index"
+                                                        autofocus
+                                                        title="Numero de contratos *"
+                                                        name="contract_index">
+                                                    <option value="-1">Numero de contratos *</option>
+                                                    <option value="0"
+                                                        @if(old('contract_index') == '0')
+                                                            selected="true"
+                                                        @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '0')
+                                                            selected="true"
+                                                            @endif
+                                                        @endif>0 - 1000</option>
+                                                    <option value="1"
+                                                            @if(old('contract_index') == '1')
                                                             selected="true"
                                                             @elseif(isset($companyCategory->id))
-                                                            @if($companyCategory->categorydetail_id  == $category->id)
+                                                            @if($companyCategory->contract_index  == '1')
                                                             selected="true"
                                                             @endif
+                                                            @endif>1000 - 5000</option>
+                                                    <option value="2"
+                                                            @if(old('contract_index') == '2')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '2')
+                                                            selected="true"
                                                             @endif
-                                                    >{{ ucwords($category->categoryname . ' / '. $category->name) }}</option>
-                                                @endforeach
-                                            </select>
-                                            <span class="highlight"></span>
-                                            <span class="bar"></span>
-                                            @if ($errors->has('categorydetail_id'))
-                                                <span class="help-block">
-                                                <strong>{{ $errors->first('categorydetail_id') }}</strong>
-                                            </span>
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!--<div class="form-group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
-                                    <label for="state_id" class="col-md-4 control-label">Categorias *</label>
-                                    <div class="col-md-6">
-                                        <select class="form-control"
-                                                id="categorydetail_id"
-                                                autofocus
-                                                name="categorydetail_id">
-                                            <option>[--Selecione--]</option>
-                                            @foreach ($categories as $category)
-                                                <option
-                                                        value="{{ $category->id }}"
-                                                        data-min-value="{{ $category->minvalue }}"
-                                                        data-max-value="{{ $category->maxvalue }}"
-                                                        @if(old('categorydetail_id') == $category->id)
-                                                        selected="true"
-                                                        @elseif(isset($companyCategory->id))
-                                                        @if($companyCategory->categorydetail_id  == $category->id)
-                                                        selected="true"
-                                                        @endif
-                                                        @endif
-                                                >{{ ucwords($category->categoryname . ' / '. $category->name) }}</option>
-                                            @endforeach
-                                        </select>
-                                        @if ($errors->has('categorydetail_id'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('categorydetail_id') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>-->
-
-                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                    <div class="col-md-2">&nbsp;</div>
-                                    <div class="col-md-8">
-                                        <div class="group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                            <input id="name" name="name" class="md" type="text" required
-                                                   value="{{ isset($companyCategory->name) ? $companyCategory->name : old('name') }}">
-                                            <span class="highlight"></span>
-                                            <span class="bar"></span>
-                                            <label for="name" class="md">Nome do serviço *</label>
-                                            @if ($errors->has('name'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('name') }}</strong>
+                                                            @endif>5000 - 100000</option>
+                                                    <option value="3"
+                                                            @if(old('contract_index') == '3')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '3')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>10000 - 20000</option>
+                                                    <option value="4"
+                                                            @if(old('contract_index') == '4')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '4')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>20000 - 30000</option>
+                                                    <option value="5"
+                                                            @if(old('contract_index') == '5')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '5')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>30000 - 40000</option>
+                                                    <option value="6"
+                                                            @if(old('contract_index') == '6')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '6')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>40000 - 50000</option>
+                                                    <option value="7"
+                                                            @if(old('contract_index') == '7')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '7')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>50000 - 60000</option>
+                                                    <option value="8"
+                                                            @if(old('contract_index') == '8')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '8')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>60000 - 70000</option>
+                                                    <option value="9"
+                                                            @if(old('contract_index') == '9')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '9')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>70000 - 80000</option>
+                                                    <option value="10"
+                                                            @if(old('contract_index') == '10')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '10')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>80000 - 90000</option>
+                                                    <option value="11"
+                                                            @if(old('contract_index') == '11')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '11')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>90000 - 100000</option>
+                                                    <option value="12"
+                                                            @if(old('contract_index') == '12')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '12')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>100000 - 130000</option>
+                                                    <option value="13"
+                                                            @if(old('contract_index') == '13')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '13')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>130000 - 160000</option>
+                                                    <option value="14"
+                                                            @if(old('contract_index') == '14')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '14')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>160000 - 190000</option>
+                                                    <option value="15"
+                                                            @if(old('contract_index') == '15')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '15')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>190000 - 220000</option>
+                                                    <option value="16"
+                                                            @if(old('contract_index') == '16')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '16')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>220000 - 250000</option>
+                                                    <option value="17"
+                                                            @if(old('contract_index') == '17')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '17')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>250000 - 280000</option>
+                                                    <option value="18"
+                                                            @if(old('contract_index') == '18')
+                                                            selected="true"
+                                                            @elseif(isset($companyCategory->id))
+                                                            @if($companyCategory->contract_index  == '18')
+                                                            selected="true"
+                                                            @endif
+                                                            @endif>280000 - 300000</option>
+                                                </select>
+                                                <span class="highlight"></span>
+                                                <span class="bar"></span>
+                                                @if ($errors->has('contract_index'))
+                                                    <span class="help-block">
+                                                    <strong>{{ $errors->first('contract_index') }}</strong>
                                                 </span>
-                                            @endif
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
-
-                                <!--<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }} ">
-                                    <label for="name" class="col-md-4 control-label">Nome do serviço *</label>
-
-                                    <div class="col-md-6">
-                                        <input id="name" autofocus type="text" class="form-control" name="name"
-                                               value="{{ isset($companyCategory->name) ? $companyCategory->name : old('name') }}">
-
-                                        @if ($errors->has('name'))
-                                            <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                        @endif
-                                    </div>
-                                </div>-->
-
-                                <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                    <div class="col-md-2">&nbsp;</div>
-                                    <div class="col-md-8">
-                                        <div class="group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                            <textarea title="Descrição" rows="8" name="description"  id="description" class="md"  required >{{ isset($companyCategory->description) ? $companyCategory->description : old('description') }}</textarea>
-                                            <span class="highlight"></span>
-                                            <span class="bar"></span>
-                                            <label for="description" class="md">Descrição *</label>
-                                            @if ($errors->has('description'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('description') }}</strong>
+                                <div id="fields-detail"
+                                     @if (isset($companyCategory->category_id))
+                                         style="display: {{ $companyCategory->category->type == '0' ? 'block' : 'none' }}"
+                                     @else
+                                         style="display:none"
+                                     @endif>
+                                    <div class="form-group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
+                                        <div class="col-md-2">&nbsp;</div>
+                                        <div class="col-md-8">
+                                            <div class="group{{ $errors->has('categorydetail_id') ? ' has-error' : '' }}">
+                                                <select class="md"
+                                                        id="categorydetail_id"
+                                                        autofocus
+                                                        title="Sub-categoria *"
+                                                        name="categorydetail_id">
+                                                    <option data-min-value="0"
+                                                            data-max-value="0"
+                                                            value="-1">Sub-categoria *</option>
+                                                    @foreach ($categoriesdetail as $category)
+                                                        <option
+                                                                value="{{ $category->id }}"
+                                                                data-min-value="{{ $category->minvalue }}"
+                                                                data-max-value="{{ $category->maxvalue }}"
+                                                                data-description="{{ $category->description }}"
+                                                                @if(old('categorydetail_id') == $category->id)
+                                                                selected="true"
+                                                                @elseif(isset($companyCategory->id))
+                                                                @if($companyCategory->categorydetail_id  == $category->id)
+                                                                selected="true"
+                                                                @endif
+                                                                @endif
+                                                        >{{ ucwords($category->categoryname . ' / '. $category->name) }}</option>
+                                                    @endforeach
+                                                </select>
+                                                <span class="highlight"></span>
+                                                <span class="bar"></span>
+                                                @if ($errors->has('categorydetail_id'))
+                                                    <span class="help-block">
+                                                    <strong>{{ $errors->first('categorydetail_id') }}</strong>
                                                 </span>
-                                            @endif
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!--<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
-                                    <label for="description" class="col-md-4 control-label">Descrição *</label>
-
-                                    <div class="col-md-6">
-                                        <textarea class="form-control" rows="8" name="description"  id="description">{{ isset($companyCategory->description) ? $companyCategory->description : old('description') }}</textarea>
-                                        @if ($errors->has('description'))
-                                            <span class="help-block">
-                                    <strong>{{ $errors->first('description') }}</strong>
-                                </span>
-                                        @endif
+                                    <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                        <div class="col-md-2">&nbsp;</div>
+                                        <div class="col-md-8">
+                                            <div class="group{{ $errors->has('name') ? ' has-error' : '' }}">
+                                                <input id="name" name="name" class="md" type="text" required
+                                                       value="{{ isset($companyCategory->name) ? $companyCategory->name : old('name') }}">
+                                                <span class="highlight"></span>
+                                                <span class="bar"></span>
+                                                <label for="name" class="md">Nome do serviço *</label>
+                                                @if ($errors->has('name'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('name') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>-->
 
+                                    <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+                                        <div class="col-md-2">&nbsp;</div>
+                                        <div class="col-md-8">
+                                            <div class="group{{ $errors->has('description') ? ' has-error' : '' }}">
+                                                <textarea title="Descrição" rows="8" name="description"  id="description" class="md"  required >{{ isset($companyCategory->description) ? $companyCategory->description : old('description') }}</textarea>
+                                                <span class="highlight"></span>
+                                                <span class="bar"></span>
+                                                <label for="description" class="md">Descrição *</label>
+                                                @if ($errors->has('description'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('description') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                <div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
-                                    <div class="col-md-2">&nbsp;</div>
-                                    <div class="col-md-8">
-                                        <div class="group{{ $errors->has('value') ? ' has-error' : '' }}">
-                                            <input id="value" name="value" class="md" type="text" required
-                                                   value="{{ isset($companyCategory->value) ? $companyCategory->value : old('value') }}">
-                                            <span class="highlight"></span>
-                                            <span class="bar"></span>
-                                            <label for="value" class="md">Valor *</label>
-                                            <span id="text-detail" class="help-block" >
-                                                Valores entre <span id="text-det-value"></span>.
-                                            </span>
-                                            @if ($errors->has('name'))
-                                                <span class="help-block">
-                                                    <strong>{{ $errors->first('value') }}</strong>
+                                    <div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
+                                        <div class="col-md-2">&nbsp;</div>
+                                        <div class="col-md-8">
+                                            <div class="group{{ $errors->has('value') ? ' has-error' : '' }}">
+                                                <input id="value" name="value" class="md" type="text" required
+                                                       value="{{ isset($companyCategory->value) ? $companyCategory->value : old('value') }}">
+                                                <span class="highlight"></span>
+                                                <span class="bar"></span>
+                                                <label for="value" class="md">Valor *</label>
+                                                <span id="text-detail" class="help-block" >
+                                                    Valores entre <span id="text-det-value"></span>.
                                                 </span>
-                                            @endif
+                                                @if ($errors->has('name'))
+                                                    <span class="help-block">
+                                                        <strong>{{ $errors->first('value') }}</strong>
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
 
-                                <!--<div class="form-group{{ $errors->has('value') ? ' has-error' : '' }}">
-                                    <label for="value" class="col-md-4 control-label">Valor *</label>
-
-                                    <div class="col-md-6">
-                                        <input id="value" type="text" class="form-control" name="value"
-                                               value="{{ isset($companyCategory->value) ? $companyCategory->value : old('value') }}">
-
-                                        <span id="text-detail" class="help-block" >
-                                            Valores entre <span id="text-det-value"></span>.
-                                        </span>
-                                        @if ($errors->has('value'))
-                                            <span class="help-block">
-                                                <strong>{{ $errors->first('value') }}</strong>
-                                            </span>
-                                        @endif
-                                    </div>
-                                </div>-->
-
-                                <input type="hidden" name="isactive" id="isactive" value="0">
-                                <div class="form-group{{ $errors->has('isactive') ? ' has-error' : '' }}">
+                                    <input type="hidden" name="isactive" id="isactive" value="0">
+                                    <div class="form-group{{ $errors->has('isactive') ? ' has-error' : '' }}">
                                     <div class="checkbox">
                                         <div class="col-md-2">&nbsp;</div>
                                         <div class="col-md-4">
@@ -381,6 +473,7 @@
                                     </div>
                                 </div>
 
+                                </div>
                                 <div class="form-group">
                                     <div class="col-md-2">
                                         <a class="btn btn-default"
@@ -417,8 +510,12 @@
                                     </div>
                                     <div class="col-xs-12 col-sm-7 col-md-7" style="padding-top: 30px">
                                         <h3 ><b class="black-text">{{ ucwords($category->name) }}</b></h3>
-                                        <p class="black-text" ><span>{{ $category->description  }}</span></p>
-                                        <p class="black-text"><strong>{{ $category->value  }}</strong></p>
+                                        <p class="black-text" ><span>{{ $category->description  }} </span></p>
+                                        @if ($category->category->type == 1)
+                                            <p class="black-text"><strong>Numero de contratos: {{ $category->getNumberContract() }}</strong></p>
+                                        @else
+                                            <p class="black-text"><strong>{{ $category->value  }}</strong></p>
+                                        @endif
                                     </div>
                                     <div class="col-xs-12 col-sm-2 col-md-2" style="padding-left: 0;padding-top: 30px;">
                                         <div class="col-md-12 col-sm-12 col-xs-6 text-center">
@@ -442,8 +539,7 @@
                                                   action="{{ url('companies/profile/category/'.$category->id.'/remove')  }}"
                                                   @else
                                                   action="{{ url('register/category/'.$category->id.'/remove')  }}"
-                                                    @endif
-                                            >
+                                                    @endif>
                                                 <input name="_method" type="hidden" value="DELETE">
                                                 {{ csrf_field() }}
                                                 <button class="btn btn-danger"
@@ -452,10 +548,6 @@
                                                     <i class="glyphicon glyphicon-trash"></i> Remover
                                                 </button>
                                             </form>
-
-
-
-
                                         </div>
                                     </div>
                                 </article>
@@ -680,7 +772,11 @@
     <script type="text/javascript">
         var cbeCategory = $('#category_id');
         var cbeCategorydetail = $('#categorydetail_id');
+        var fieldsDetail = $('#fields-detail');
+        var fieldsContract = $('#fields-contract');
         var txtDetail = $('#text-detail');
+        var txtNameDetail = $('#name');
+        var txtDescriptionDetail = $('#description');
 
         var categorydetail_id = '{{ isset($companyCategory->categorydetail_id) ? $companyCategory->categorydetail_id : old('categorydetail_id') }}';
         $(document).ready( function() {
@@ -717,26 +813,34 @@
             else
                 txtDetail.hide(250);
         });
+
         function clearCategoryDetail(input) {
             input.empty();
             input.append('<option data-min-value="0" data-max-value="0" value="-1">Sub-categoria *</option>');
+
         }
 
         function setCategoryDetailById(input, value) {
             input.val(value).change();
         }
 
-        cbeCategory.change(function () {
-            console.log('0');
-            if ($(this).val() < 0)
-                txtDetail.hide(250);
-        });
-
-
         function loadCategoryDetail(cbeSubCategory, idCategory, categorydetail_id) {
             var uri = '/api/categories/' + idCategory + '/detail';
+            /**/
 
             if (idCategory > -1) {
+                var selected = $('#category_id').find('option:selected');
+                if (selected.length > 0) {
+
+                    fieldsDetail.css({
+                        display: ((selected[0].dataset.type || 0).toString() === '1') ? 'none' : 'block'
+                    });
+
+                    fieldsContract.css({
+                        display: ((selected[0].dataset.type || 0).toString() === '1') ? 'block' : 'none'
+                    });
+                }
+
                 window.request._get(uri, function (data) {
                     try {
                         var subCatJson = data;
@@ -744,8 +848,7 @@
                         cbeSubCategory.append(new Option('Sub-categoria *', '-1'));
                         for (var i = 0, items = subCatJson.length; i < items; i++) {
                             //cbeSubCategory.append(new Option(subCatJson[i].name, subCatJson[i].id));
-                            cbeSubCategory.append('<option data-min-value="' + subCatJson[i].minvalue + '" data-max-value="' +subCatJson[i].maxvalue+ '" value="' + subCatJson[i].id + '">' + subCatJson[i].name + '</option>');
-
+                            cbeSubCategory.append('<option  data-description="'+ subCatJson[i].description +'" data-min-value="' + subCatJson[i].minvalue + '" data-max-value="' +subCatJson[i].maxvalue+ '" value="' + subCatJson[i].id + '">' + subCatJson[i].name + '</option>');
                         }
 
                         setCategoryDetailById(cbeSubCategory, categorydetail_id || -1);
@@ -755,16 +858,36 @@
                     }
                 });
             }
-            else
+            else {
                 clearCategoryDetail(cbeSubCategory);
+                txtNameDetail.removeAttr('disabled');
+                txtDescriptionDetail.removeAttr('disabled');
+                txtNameDetail.val('');
+                txtDescriptionDetail.val('');
+            }
 
         }
 
-        cbeCategory.change(function() {
+        cbeCategory.change(function (e) {
+            console.log('changed');
+
+            var selected = $('#category_id').find('option:selected');
+            if (selected.length > 0) {
+
+                fieldsDetail.css({
+                    display: ((selected[0].dataset.type || 0).toString() === '1') ? 'none' : 'block'
+                });
+
+                fieldsContract.css({
+                    display: ((selected[0].dataset.type || 0).toString() === '1') ? 'block' : 'none'
+                });
+            }
+
+            if ($(this).val() < 0)
+                txtDetail.hide(250);
+
             loadCategoryDetail(cbeCategorydetail, cbeCategory.val());
         });
-
-        console.log(categorydetail_id);
 
         loadCategoryDetail(cbeCategorydetail, cbeCategory.val(), categorydetail_id);
 

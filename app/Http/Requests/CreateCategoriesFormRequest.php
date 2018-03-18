@@ -25,6 +25,10 @@ class CreateCategoriesFormRequest extends Request
     {
         return [
             'name' => 'required|unique:category|max:255',
+            'orderby' =>'required|Integer',
+            'type' =>'required',
+            'readonlyname' =>'required|Integer',
+            'readonlydescription' =>'required|Integer',
             'isactive' => 'required',
         ];
     }

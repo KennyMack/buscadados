@@ -10,6 +10,7 @@ class CategoryDetail extends Model
     protected $fillable = [
         'category_id',
         'name',
+        'description',
         'minvalue',
         'maxvalue',
         'isactive',

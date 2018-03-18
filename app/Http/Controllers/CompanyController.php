@@ -170,34 +170,170 @@ class CompanyController extends Controller
         ]);
     }
 
-    public function changeProfileCategory($idCompanyCategory, RegisterCompanyCategoryFormRequest $request)
+    public function addProfileCategory(RegisterCompanyCategoryFormRequest $request)
     {
-        $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
-
-        $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
-
         $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
 
-        $validator = Validator::make($request->all(), [
-            'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
-        ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+        $category = Category::findOrFail($request->input('category_id'));
+        $categoryDetail = CategoryDetail::find($request->input('categorydetail_id'));
 
-        if ($validator->fails()) {
-            return redirect('companies/profile/category/'.$idCompanyCategory.'/change')
-                ->withErrors($validator)
-                ->withInput();
+        $company_id  = Auth::user()->company()->id;
+        $category_id  = $request->input('category_id');
+        $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
+        $name  = $request->input('name');
+        $description  = $request->input('description');
+        $value  = $request->input('value');
+        $isactive = $request->input('isactive');
+        $contract_index = $request->input('contract_index');
+
+
+        if ($categoryDetail != null) {
+
+            $validator = Validator::make($request->all(), [
+                'value' => 'required|numeric|min:' . floatval($categoryDetail->minvalue) . '|max:' . floatval($categoryDetail->maxvalue),
+            ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+
+            if ($validator->fails()) {
+                return redirect('companies/profile/category')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
         }
+        else {
+            // 0 - category detail 1 - category contract
+            if ($category->type == 0) {
+
+                $validator = Validator::make($request->all(), [
+                    'categorydetail_id' => 'required|min:0|integer',
+                    'name' => 'required|max:120',
+                    'description' => 'required|max:255',
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('companies/profile/category')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            }
+            else {
+                $validator = Validator::make($request->all(), [
+                    'contract_index' => 'required|min:0|integer'
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('companies/profile/category')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                $value = 0;
+                $name = 'Contrato';
+                $description = '';
+            }
+        }
+
         $company = Auth::user()->company();
 
+        $companyCategory = CompanyCategory::create([
+            'company_id' => $company_id,
+            'category_id' => $category_id,
+            'categorydetail_id' => $categorydetail_id,
+            'imagepath' => '',
+            'imageurl' => '',
+            'name' => $name,
+            'description' => $description,
+            'value' => $value,
+            'contract_index' => $contract_index,
+            'isactive'=> $isactive,
+        ]);
 
+        if (count($request->input('imgdata') ) > 0) {
+            CompanyCatImageModel::saveImagesCategory(
+                $request->input('imgdata'),
+                $company->id,
+                $companyCategory->id
+            );
+        }
 
-        $companyCategory->categorydetail_id = $request->categorydetail_id;
-        $companyCategory->name = $request->name;
-        $companyCategory->description = $request->description;
-        $companyCategory->value = $request->value;
-        $companyCategory->isactive = $request->isactive;
+        CompanyCatImageModel::clearTempImages();
+
+        return Redirect::to('/companies/profile/category');
+    }
+
+    public function changeProfileCategory($idCompanyCategory, RegisterCompanyCategoryFormRequest $request)
+    {
+        $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
+
+        $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
+
+        $category = Category::findOrFail($request->input('category_id'));
+        $categoryDetail = CategoryDetail::find($request->input('categorydetail_id'));
+
+        $category_id  = $request->input('category_id');
+        $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
+        $name  = $request->input('name');
+        $description  = $request->input('description');
+        $value  = $request->input('value');
+        $isactive = $request->input('isactive');
+        $contract_index = $request->input('contract_index');
+
+        if ($categoryDetail != null) {
+
+            $validator = Validator::make($request->all(), [
+                'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
+            ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+
+            if ($validator->fails()) {
+                return redirect('companies/profile/category/'.$idCompanyCategory.'/change')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
+        }
+        else {
+            // 0 - category detail 1 - category contract
+            if ($category->type == 0) {
+
+                $validator = Validator::make($request->all(), [
+                    'categorydetail_id' => 'required|min:0|integer',
+                    'name' => 'required|max:120',
+                    'description' => 'required|max:255',
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('companies/profile/category/'.$idCompanyCategory.'/change')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            }
+            else {
+                $validator = Validator::make($request->all(), [
+                    'contract_index' => 'required|min:0|integer'
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('companies/profile/category/'.$idCompanyCategory.'/change')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                $value = 0;
+                $name = 'Contrato';
+                $description = '';
+            }
+        }
+
+        $company = Auth::user()->company();
+
+        $companyCategory->category_id = $category_id;
+        $companyCategory->categorydetail_id = $categorydetail_id;
+        $companyCategory->name = $name;
+        $companyCategory->description = $description;
+        $companyCategory->value = $value;
+        $companyCategory->isactive = $isactive;
+        $companyCategory->contract_index = $contract_index;
 
         $companyCategory->save();
+
         if (count($request->input('imgdata') ) >0) {
             CompanyCatImageModel::saveImagesCategory(
                 $request->input('imgdata'),
@@ -249,47 +385,22 @@ class CompanyController extends Controller
             'value.numeric' => 'O campo valor deve ser um número.',
             'value.min' => 'O campo valor deve estar entre '.$min.' e '.$max.'.',
             'value.max' => 'O campo valor deve estar entre '.$min.' e '.$max.'.',
+
+            'categorydetail_id.required' => 'Selecione a sub-categoria.',
+            'categorydetail_id.integer' => 'Selecione a sub-categoria.',
+            'categorydetail_id.min' => 'Selecione a sub-categoria.',
+
+            'name.required' => 'O campo nome é obrigatório.',
+            'name.max' => 'O campo nome deve ter no max. 255 caracteres.',
+
+            'description.required' => 'O campo descrição é obrigatório.',
+            'description.max' => 'O campo descrição deve ter no max. 255 caracteres.',
+
+            'contract_index.required' => 'Selecione o número de contratos.',
+            'contract_index.integer' => 'Selecione o número de contratos.',
+            'contract_index.min' => 'Selecione o número de contratos.',
+
         ];
-    }
-
-    public function addProfileCategory(RegisterCompanyCategoryFormRequest $request)
-    {
-        $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
-        $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
-
-        $validator = Validator::make($request->all(), [
-            'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
-        ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
-
-        if ($validator->fails()) {
-            return redirect('companies/profile/category')
-                ->withErrors($validator)
-                ->withInput();
-        }
-        $company = Auth::user()->company();
-
-        $companyCategory = CompanyCategory::create([
-            'company_id' => Auth::user()->company()->id,
-            'categorydetail_id' => $request->input('categorydetail_id'),
-            'imagepath' => '',
-            'imageurl' => '',
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'value' => $request->input('value'),
-            'isactive'=> $request->input('isactive'),
-        ]);
-
-        if (count($request->input('imgdata') ) > 0) {
-            CompanyCatImageModel::saveImagesCategory(
-                $request->input('imgdata'),
-                $company->id,
-                $companyCategory->id
-            );
-        }
-
-        CompanyCatImageModel::clearTempImages();
-
-        return Redirect::to('/companies/profile/category');
     }
 
     public function deleteProfileCategory($idCompanyCategory)
@@ -355,7 +466,7 @@ class CompanyController extends Controller
 
     private function getCategories()
     {
-        return Category::where('isactive', 1)->orderBy('name')->get();
+        return Category::where('isactive', 1)->orderBy('orderby')->get();
     }
 
     private function getCompanyCategoryImages($idCompanyCat)
@@ -612,28 +723,77 @@ class CompanyController extends Controller
 
     public function changeRegisterCategory($idCompanyCategory, RegisterCompanyCategoryFormRequest $request)
     {
-        $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
-
-        $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
-
         $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
 
-        $validator = Validator::make($request->all(), [
-            'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
-        ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+        $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
 
-        if ($validator->fails()) {
-            return redirect('register/category/'.$idCompanyCategory.'/change')
-                ->withErrors($validator)
-                ->withInput();
+        $category = Category::findOrFail($request->input('category_id'));
+        $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
+
+        $category_id  = $request->input('category_id');
+        $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
+        $name  = $request->input('name');
+        $description  = $request->input('description');
+        $value  = $request->input('value');
+        $isactive = $request->input('isactive');
+        $contract_index = $request->input('contract_index');
+
+        if ($categoryDetail != null) {
+
+            $validator = Validator::make($request->all(), [
+                'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
+            ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+
+            if ($validator->fails()) {
+                return redirect('register/category/'.$idCompanyCategory.'/change')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
         }
+        else {
+            // 0 - category detail 1 - category contract
+            if ($category->type == 0) {
+
+                $validator = Validator::make($request->all(), [
+                    'categorydetail_id' => 'required|min:0|integer',
+                    'name' => 'required|max:120',
+                    'description' => 'required|max:255',
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('register/category/'.$idCompanyCategory.'/change')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            }
+            else {
+                $validator = Validator::make($request->all(), [
+                    'contract_index' => 'required|min:0|integer'
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('register/category/'.$idCompanyCategory.'/change')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                $value = 0;
+                $name = 'Contrato';
+                $description = '';
+            }
+        }
+
+
+
         $company = Auth::user()->company();
 
-        $companyCategory->categorydetail_id = $request->categorydetail_id;
-        $companyCategory->name = $request->name;
-        $companyCategory->description = $request->description;
-        $companyCategory->value = $request->value;
-        $companyCategory->isactive = $request->isactive;
+        $companyCategory->category_id = $category_id ;
+        $companyCategory->categorydetail_id = $categorydetail_id;
+        $companyCategory->name = $name;
+        $companyCategory->description = $description;
+        $companyCategory->value = $value;
+        $companyCategory->contract_index = $contract_index;
+        $companyCategory->isactive = $isactive;
 
 
         $companyCategory->save();
@@ -659,30 +819,80 @@ class CompanyController extends Controller
 
     public function addRegisterCategory(RegisterCompanyCategoryFormRequest $request)
     {
-        $categoryDetail = CategoryDetail::findOrFail($request->input('categorydetail_id'));
-
         $request->merge(['value' => Utils\ConvDecimal::StrToDecimal($request->input('value'))]);
 
-        $validator = Validator::make($request->all(), [
-            'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
-        ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+        $category = Category::findOrFail($request->input('category_id'));
+        $categoryDetail = CategoryDetail::find($request->input('categorydetail_id'));
 
-        if ($validator->fails()) {
-            return redirect('register/category')
-                ->withErrors($validator)
-                ->withInput();
+        $company_id  = Auth::user()->company()->id;
+        $category_id  = $request->input('category_id');
+        $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
+        $name  = $request->input('name');
+        $description  = $request->input('description');
+        $value  = $request->input('value');
+        $isactive = $request->input('isactive');
+        $contract_index = $request->input('contract_index');
+
+
+        if ($categoryDetail != null) {
+
+            $validator = Validator::make($request->all(), [
+                'value' => 'required|numeric|min:'.floatval($categoryDetail->minvalue).'|max:'.floatval($categoryDetail->maxvalue),
+            ], $this->messages(floatval($categoryDetail->minvalue), floatval($categoryDetail->maxvalue)));
+
+            if ($validator->fails()) {
+                return redirect('register/category')
+                    ->withErrors($validator)
+                    ->withInput();
+            }
         }
+        else {
+            // 0 - category detail 1 - category contract
+            if ($category->type == 0) {
+
+                $validator = Validator::make($request->all(), [
+                    'categorydetail_id' => 'required|min:0|integer',
+                    'name' => 'required|max:120',
+                    'description' => 'required|max:255',
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('register/category')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+            }
+            else {
+                $validator = Validator::make($request->all(), [
+                    'contract_index' => 'required|min:0|integer'
+                ], $this->messages(0, 0));
+
+                if ($validator->fails()) {
+                    return redirect('register/category')
+                        ->withErrors($validator)
+                        ->withInput();
+                }
+
+                $value = 0;
+                $name = 'Contrato';
+                $description = '';
+            }
+        }
+
+
         $company = Auth::user()->company();
 
         $companyCategory = CompanyCategory::create([
-            'company_id' => Auth::user()->company()->id,
-            'categorydetail_id' => $request->input('categorydetail_id'),
+            'company_id' => $company_id,
+            'category_id' => $category_id,
+            'categorydetail_id' => $categorydetail_id,
             'imagepath' => '',
             'imageurl' => '',
-            'name' => $request->input('name'),
-            'description' => $request->input('description'),
-            'value' => $request->input('value'),
-            'isactive'=> $request->input('isactive'),
+            'name' => $name,
+            'description' => $description,
+            'value' => $value,
+            'contract_index' => $contract_index,
+            'isactive'=> $isactive,
         ]);
 
         if (count($request->input('imgdata') ) > 0) {

@@ -58,8 +58,10 @@
                         </div>
                         <div class="row">
                             <div class="col-md-12">
+
                                 @foreach($company->companyCategories as $category)
-                                    @if($category->isactive == 1)
+                                    @if($category->isactive == 1 &&
+                                        $category->categorydetail_id != null)
                                         <div class="col-md-4 col-sm-6" style="margin-top: 10px; box-sizing: border-box;">
                                             <div class="col-md-12" style="height: 210px">
                                                 <img src="{{ $category->getMainImage() }}"

@@ -9,6 +9,8 @@
         var cbeCategory = $('#category_id');
         var cbeCategorydetail = $('#categorydetail_id');
         var txtDetail = $('#text-detail');
+        var txtNameDetail = $('#name');
+        var txtDescriptionDetail = $('#description');
         var txtDetailContent = $('#text-det-value');
         var btnAdd = $('#btnAdd');
         var btnRemove = $('#btnRemove');
@@ -16,6 +18,9 @@
         var btnImageBox = $('#btn-image-box');
         var count = Number($('#imageBox li').length) - 1;
 
+        cbeCategory.change(function(e) {
+
+        });
 
 
         btnAdd.click(function () {
@@ -88,6 +93,18 @@
                 max);
 
             if (cbeCategorydetail.val() > -1){
+                var selected = $('#category_id').find('option:selected');
+                if (selected.length > 0) {
+                    if ((selected[0].dataset.readonlyname || 0).toString() === '1') {
+                        txtNameDetail.val($(this).find(':selected').text());
+                        txtNameDetail.attr('readonly', true);
+                    }
+
+                    if ((selected[0].dataset.readonlydescription || 0).toString() === '1') {
+                        txtDescriptionDetail.val($(this).find(':selected').data('description'));
+                        txtDescriptionDetail.attr('readonly', true);
+                    }
+                }
                 txtDetail.css({
                     'opacity': '0',
                     'display': 'block'

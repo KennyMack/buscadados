@@ -44,6 +44,22 @@
                                 </div>
                             </div>
 
+                            <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+                                <label for="description" class="col-md-4 control-label">Descrição</label>
+
+                                <div class="col-md-6">
+                                    <textarea class="form-control"
+                                              id="description"
+                                              name="description"
+                                              rows="3">{{ isset($categoryDetail->description) ? $categoryDetail->description : old('description') }}</textarea>
+                                    @if ($errors->has('name'))
+                                        <span class="help-block">
+                                    <strong>{{ $errors->first('description') }}</strong>
+                                </span>
+                                    @endif
+                                </div>
+                            </div>
+
                             <div class="form-group{{ $errors->has('minvalue') ? ' has-error' : '' }}">
                                 <label for="minvalue" class="col-md-4 control-label">Valor minimo</label>
 

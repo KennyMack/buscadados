@@ -52,6 +52,7 @@ class CategoryDetailController extends Controller
 
         $categoryDetail = $categoryDetail->create([
             'name'=> $request->input('name'),
+            'description'=> $request->input('description'),
             'minvalue' => $request->input('minvalue'),
             'maxvalue' => $request->input('maxvalue'),
             'isactive' => $request->input('isactive'),
@@ -68,6 +69,7 @@ class CategoryDetailController extends Controller
         $categoryDetail = CategoryDetail::findOrFail($idDetail);
 
         $categoryDetail->name = $request->input('name');
+        $categoryDetail->description = $request->input('description');
         $categoryDetail->isactive = $request->input('isactive');
         $categoryDetail->category_id = $idCategory;
         $categoryDetail->minvalue = $request->input('minvalue');

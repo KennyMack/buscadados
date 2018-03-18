@@ -101,7 +101,7 @@ class SearchController extends Controller
 
     public function categoryDetail($idCategory)
     {
-        $companyCategory = CompanyCategory::findOrFail($idCategory);
+        $companyCategory = CompanyCategory::findOrFail($idCategory); //->whereNotNull('categorydetail_id');
 
         $images = $companyCategory->getAllImages()->get();
 

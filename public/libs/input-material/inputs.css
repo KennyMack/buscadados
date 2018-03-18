@@ -8,6 +8,7 @@ select.md {
     font-size:18px;
     padding:10px 10px 5px 5px;
     display:block;
+    background: #fff;
     /*width:300px;*/
     width: 100%;
     border:none;
@@ -65,6 +66,10 @@ label.md 				 {
 }
 
 /* active state */
+input.md:disabled ~ label.md,
+textarea.md:disabled ~ label.md,
+input.md:read-only ~ label.md,
+textarea.md:read-only ~ label.md,
 input.md:focus ~ label.md, input.md:valid ~ label.md,
 textarea.md:focus ~ label.md, textarea.md:valid ~ label.md{
     top:-8px;

@@ -17,13 +17,21 @@
         txtcellphone.mask("(99) 99999-9999");
         txtphone.mask("(99) 9999-9999");
         txtpostalnumber.mask("99999-999");
-        var valueCep = '';
-        txtpostalnumber.focusin(function () {
-            valueCep = $(this).val();
+        var changed = false;
+        txtpostalnumber.change(function () {
+            console.log($(this).val());
+            changed = true;
+        });
+
+        txtpostalnumber.on('keypress', function () {
+            console.log($(this).val());
+            changed = true;
         });
 
         txtpostalnumber.focusout(function (ee) {
-            if (valueCep !== $(this).val()) {
+            console.log($(this).val());
+            if (changed) {
+                changed = false;
                 modal.toggle();
                 $.getJSON("https://viacep.com.br/ws/" + $(this).val().replace(/_/g, '0') + "/json", function (result) {
                     if (!("erro" in result)) {
@@ -46,23 +54,24 @@
 
                             window.setTimeout(function () {
                                 var cities = $('#city_id option');
+                                console.log('cities');
                                 console.log(cities);
+                                console.log(result['localidade'].toString().toUpperCase());
                                 for (i = 0; i < cities.length; i++) {
-                                    if (cities[i].innerText === result['localidade']) {
+                                    if (cities[i].innerText.toUpperCase() === result['localidade'].toString().toUpperCase()) {
                                         cities[i].selected = true;
                                         break;
                                     }
                                 }
-
                                 modal.toggle();
-                            }, 1000);
-
-
+                            }, 1500);
                         }
                         else
                             modal.toggle();
-
-                        $('#number').focus();
+                        if (result['logradouro'].toString() !== '')
+                            $('#number').focus();
+                        else
+                            $('#address').focus();
                     }
                     else
                         modal.toggle();

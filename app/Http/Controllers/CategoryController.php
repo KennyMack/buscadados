@@ -48,12 +48,24 @@ class CategoryController extends Controller
         $cat = new Category();
 
         $active = $request->input('isactive');
+        $readonlyname = $request->input('readonlyname');
+        $readonlydescription = $request->input('readonlydescription');
 
         if($active == '')
             $active = 0;
+
+        if($readonlyname == '')
+            $readonlyname = 0;
+
+        if($readonlydescription == '')
+            $readonlydescription = 0;
         
         $cat = $cat->create([
             'name' => $request->input('name'),
+            'orderby' => $request->input('orderby'),
+            'type' => $request->input('type'),
+            'readonlyname' => $readonlyname,
+            'readonlydescription' => $readonlydescription,
             'isactive' => $active
         ]);
         
@@ -68,11 +80,23 @@ class CategoryController extends Controller
         $cat = Category::findOrFail($id);
 
         $active = $request->input('isactive');
-                
+        $readonlyname = $request->input('readonlyname');
+        $readonlydescription = $request->input('readonlydescription');
+
         if($active == '')
             $active = 0;
 
+        if($readonlyname == '')
+            $readonlyname = 0;
+
+        if($readonlydescription == '')
+            $readonlydescription = 0;
+
         $cat->name = $request->input('name');
+        $cat->orderby = $request->input('orderby');
+        $cat->type = $request->input('type');
+        $cat->readonlyname = $readonlyname;
+        $cat->readonlydescription = $readonlydescription;
         $cat->isactive = $active;
         $cat->id = $id;
 
