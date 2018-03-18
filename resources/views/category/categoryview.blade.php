@@ -30,8 +30,8 @@
                                     <th>Descrição</th>
                                     <th>Ordenação</th>
                                     <th>Tipo Categoria</th>
-                                    <th>Altera Nome</th>
-                                    <th>Altera Descrição</th>
+                                    <th>Bloqueia Nome</th>
+                                    <th>Bloqueia Descrição</th>
                                     <th>Ativo</th>
                                 </tr>
                             </thead>
