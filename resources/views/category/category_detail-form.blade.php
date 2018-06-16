@@ -9,6 +9,11 @@
                         <a class="pull-right" href="{{ url('admin/categories') }}">Voltar</a>
                     </div>
                     <div class="panel-body">
+                        <ol class="breadcrumb">
+                            <li><a href="{{ url('admin/categories') }}">Categorias</a></li>
+                            <li><a href="{{ url('admin/categories/'.$idCategory.'/change') }}">{{ $category->name  }}</a></li>
+                            <li class="active">Nova Categoria</li>
+                        </ol>
 
                         @if(Session::has('message_success'))
                             <div class="alert alert-success alert-dismissable">

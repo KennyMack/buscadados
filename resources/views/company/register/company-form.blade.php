@@ -144,10 +144,11 @@
                                             <span class="help-block">
                                                 <strong>{{ $errors->first('cnpjcpf') }}</strong>
                                             </span>
+                                        @else
+                                            <span id="helpTxtCnpj" style="display: none" class="help-block">
+                                                <strong>O campo CNPJ não é um CNPJ válido</strong>
+                                            </span>
                                         @endif
-                                        <span id="helpTxtCnpj" style="display: none" class="help-block">
-                                            <strong>O campo CNPJ não é um CNPJ válido</strong>
-                                        </span>
                                     </div>
                                 </div>
                             </div>

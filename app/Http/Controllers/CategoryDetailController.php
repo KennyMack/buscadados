@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\CategoryDetail;
 use App\Http\Requests\CreateCategoryDetailFormRequest;
 use Illuminate\Http\Request;
@@ -22,12 +23,18 @@ class CategoryDetailController extends Controller
     }
 
     public function newCategoryDetail($idCategory)
-    {
+    {/**&nbsp;
+    <ol class="pull-left breadcrumb">
+    <li>{{ $category->name  }}</li>
+    <li class="active">Nova Categoria</li>
+    </ol>*/
         $categorydetails = $this->getCategoryDetails($idCategory);
+        $category = Category::findOrFail($idCategory);
 
         return view('category.category_detail-form', [
             'url' => 'admin/categories/'.$idCategory.'/detail/save',
             'idCategory' => $idCategory,
+            'category' => $category,
             'categorydetails' => $categorydetails,
         ]);
     }
@@ -36,11 +43,13 @@ class CategoryDetailController extends Controller
     {
         $categoryDetail = CategoryDetail::findOrFail($idDetail);
         $categorydetails = $this->getCategoryDetails($idCategory);
+        $category = Category::findOrFail($idCategory);
 
         return view('category.category_detail-form', [
             'categoryDetail' => $categoryDetail,
             'categorydetails' => $categorydetails,
             'url' => 'admin/categories/'.$idCategory.'/detail/'.$idDetail.'/update',
+            'category' => $category,
             'idCategory' => $idCategory
         ]);
     }
