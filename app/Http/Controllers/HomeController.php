@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Category;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,18 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        return view('home', [
+            'categories' => Category::where('isactive', 1)->orderby('icon')->get(),
+        ]);
+    }
+
+    public static function getCategoryId($index)
+    {
+        $cat = Category::where('icon', $index)->get();
+        if ($cat != null &&
+            count($cat) > 0)
+            return $cat[0]->id;
+
+        return -1;
     }
 }

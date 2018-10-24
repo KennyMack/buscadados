@@ -43,7 +43,7 @@ class SearchController extends Controller
                     }
 
                     if ($has_category) {
-                        $exists_category = CategoryDetail::where('id', $id_category)->count();
+                        $exists_category = Category::where('id', $id_category)->count();
                     }
 
                     if ($exists_city > 0) {
@@ -59,7 +59,7 @@ class SearchController extends Controller
                     if ($exists_category > 0) {
                         $q->WhereHas('companyCategories', function ($q) use ($id_category) {
                             $q->where(function ($q) use ($id_category) {
-                                $q->where('categorydetail_id', $id_category);
+                                $q->where('category_id', $id_category);
                             });
                         });
 
@@ -82,7 +82,7 @@ class SearchController extends Controller
             'id_city' => $request->input('id_city'),
             'id_category' => $request->input('id_category'),
             'states' => $this->getStates(),
-            'categories' => $this->getCategoriesDetails(),
+            'categories' => Category::where('isactive', 1)->get(),//$this->getCategoriesDetails(),
             'results' => $results->paginate(10),
             'count_results' => count($results->get()),
             'type' => $request->input('type'),

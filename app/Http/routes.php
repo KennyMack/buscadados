@@ -91,6 +91,12 @@ Route::group(['prefix' => 'admin/cities', 'middleware' => ['auth', 'admin']], fu
     Route::delete('/{id}/remove', 'CityController@deleteCity');
 });
 
+Route::group(['prefix' => 'admin/parameters', 'middleware' => ['auth', 'admin']], function () {
+
+    Route::get('/', 'ParametersController@parameters');
+    Route::post('/save', 'ParametersController@saveParameters');
+});
+
 
 
 Route::group(['prefix' => 'api'], function () {

@@ -126,6 +126,7 @@ return [
         'description' => 'descrição',
         'initials' => 'sigla',
         'categorydetail_id' => 'categoria',
+        'icon' => 'icone categoria',
 
     ],
 

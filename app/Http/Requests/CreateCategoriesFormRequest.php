@@ -27,8 +27,9 @@ class CreateCategoriesFormRequest extends Request
             'name' => 'required|unique:category|max:255',
             'orderby' =>'required|Integer',
             'type' =>'required',
-            'readonlyname' =>'required|Integer',
-            'readonlydescription' =>'required|Integer',
+            'icon'=> 'required|numeric|min:1|max:9',
+            //'readonlyname' =>'required|Integer',
+            //'readonlydescription' =>'required|Integer',
             'isactive' => 'required',
         ];
     }

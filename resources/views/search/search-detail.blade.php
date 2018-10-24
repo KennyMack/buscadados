@@ -64,7 +64,7 @@
                                         $category->categorydetail_id != null)
                                         <div class="col-md-4 col-sm-6" style="margin-top: 10px; box-sizing: border-box;">
                                             <div class="col-md-12" style="height: 210px">
-                                                <img src="{{ $category->getMainImage() }}"
+                                                <img src="{{ $category->category->getMainImage() }}"
                                                      alt="{{$category->name}}"
                                                      class="thumbnail"
                                                      id="img-upload"

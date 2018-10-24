@@ -95,15 +95,12 @@
             if (cbeCategorydetail.val() > -1){
                 var selected = $('#category_id').find('option:selected');
                 if (selected.length > 0) {
-                    if ((selected[0].dataset.readonlyname || 0).toString() === '1') {
-                        txtNameDetail.val($(this).find(':selected').text());
-                        txtNameDetail.attr('readonly', true);
-                    }
+                    txtNameDetail.val($(this).find(':selected').text());
+                    //txtNameDetail.attr('readonly', true);
 
-                    if ((selected[0].dataset.readonlydescription || 0).toString() === '1') {
-                        txtDescriptionDetail.val($(this).find(':selected').data('description'));
-                        txtDescriptionDetail.attr('readonly', true);
-                    }
+                    txtDescriptionDetail.val($(this).find(':selected').data('description'));
+                    //txtDescriptionDetail.attr('readonly', true);
+
                 }
                 txtDetail.css({
                     'opacity': '0',

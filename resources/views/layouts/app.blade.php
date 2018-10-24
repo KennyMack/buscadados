@@ -123,6 +123,9 @@
                                 @if (!Auth::user()->isAdmin() && Auth::user()->companyIsEnabled())
                                     <li><a href="{{ url('companies/profile/company') }}">Meu cadastro</a></li>
                                 @endif
+                                @if (Auth::user()->isAdmin())
+                                    <li><a href="{{ url('admin/parameters') }}">Parametros</a></li>
+                                @endif
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Sair</a></li>
                             </ul>
                         </li>
@@ -130,10 +133,10 @@
                 </ul>
             </div>
         </div>
-    </nav>
-    @yield('content')
+</nav>
+@yield('content')
 
-    <!-- JavaScripts -->
+<!-- JavaScripts -->
 
 
 </body>

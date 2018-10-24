@@ -127,9 +127,17 @@
                                                             @if(isset($id_category))
                                                                 {{ $id_category == $optcategory->id ?
                                                                 'selected="true"' : ' ' }}
+                                                            @endif
+                                                            >{{ ucwords($optcategory->name) }}</option>
+                                                        @endforeach
+                                                        <!--@foreach ($categories as $optcategory)
+                                                            <option value="{{ $optcategory->id }}"
+                                                            @if(isset($id_category))
+                                                                {{ $id_category == $optcategory->id ?
+                                                                'selected="true"' : ' ' }}
                                                                     @endif
                                                             >{{ ucwords($optcategory->categoryname . ' / '. $optcategory->name) }}</option>
-                                                        @endforeach
+                                                        @endforeach-->
                                                     </select>
                                                     <span class="highlight"></span>
                                                     <span class="bar"></span>

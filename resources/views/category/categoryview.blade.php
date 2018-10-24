@@ -30,8 +30,6 @@
                                     <th>Descrição</th>
                                     <th>Ordenação</th>
                                     <th>Tipo Categoria</th>
-                                    <th>Bloqueia Nome</th>
-                                    <th>Bloqueia Descrição</th>
                                     <th>Ativo</th>
                                 </tr>
                             </thead>
@@ -57,20 +55,6 @@
                                         <td>{{ ucwords($cat->name) }}</td>
                                         <td>{{ $cat->orderby }}</td>
                                         <td>{{ $cat->getTypeDescription() }}</td>
-                                        <td>
-                                            <input type="checkbox"
-                                                   name="readonlyname"
-                                                   disabled="true"
-                                                   {{ $cat->readonlyname == 1 ? 'checked' :'' }}
-                                                   value="{{ $cat->readonlyname }}">
-                                        </td>
-                                        <td>
-                                            <input type="checkbox"
-                                                   name="readonlydescription"
-                                                   disabled="true"
-                                                   {{ $cat->readonlydescription == 1 ? 'checked' :'' }}
-                                                   value="{{ $cat->readonlydescription }}">
-                                        </td>
                                         <td>
                                             <input type="checkbox" 
                                                    name="isactive" 

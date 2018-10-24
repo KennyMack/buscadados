@@ -88,43 +88,132 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="readonlyname" id="readonlyname" value="0">
-                        <div class="form-group{{ $errors->has('readonlyname') ? ' has-error' : '' }}">
-                            <div class="col-md-offset-4  checkbox">
-                                <div class="col-md-4">
-                                    <label>
-                                        <input id="readonlyname"
-                                               type="checkbox"
-                                               name="readonlyname"
-                                               @if (isset($category->readonlyname))
+                        <input type="hidden" name="icon" id="icon" value="{{ $category->icon }}">
+                        <div class="form-group{{ $errors->has('icon') ? ' has-error' : '' }}">
+                            <label for="type" class="col-md-4 control-label">&nbsp;</label>
+                            <div class="col-md-6">
+                                <div class="dropdown">
+                                    <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                        Icone Categoria
+                                        <span class="caret"></span>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenu1" style="cursor:pointer;">
+                                        <li  style="cursor:pointer;" id="li-ropt1">
 
-                                               {{ $category->readonlyname == 1 ? 'checked' : ''}}
-                                               @else
-                                               checked
-                                               @endif
-                                               value="1"> Bloqueia nome
-                                    </label>
+                                            <label style="padding-top:5px; padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt1"
+                                                       type="radio"
+                                                       name="ropt1"
+                                                       @if (isset($category->icon))
+                                                            {{ $category->icon == 1 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="1"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/1.jpg')  }}" /> Empresa Funerária
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt2">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt2"
+                                                       type="radio"
+                                                       name="ropt2"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 2 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="2"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/2.jpg')  }}" /> Emp. Admin. de Planos de Assist. Funeral
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt3">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt3"
+                                                       type="radio"
+                                                       name="ropt3"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 3 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="3"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/3.jpg')  }}" /> Laboratório de Tanatopraxia
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt4">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt4"
+                                                       type="radio"
+                                                       name="ropt4"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 4 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="4"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/4.jpg')  }}" /> Crematório
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt5">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt5"
+                                                       type="radio"
+                                                       name="ropt5"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 5 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="5"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/5.jpg')  }}" /> Empresa de Artefatos Fúnebres
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt6">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt6"
+                                                       type="radio"
+                                                       name="ropt6"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 6 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="6"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/6.jpg')  }}" /> Industria de Urnas Mortuárias
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt7">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt7"
+                                                       type="radio"
+                                                       name="ropt7"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 7 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="7"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/7.jpg')  }}" /> Empresa de Equipamentos Funerários
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt8">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt8"
+                                                       type="radio"
+                                                       name="ropt8"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 8 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="8"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/8.jpg')  }}" /> Empresa de Carros Transformação de Veículos Fúnebres
+                                            </label>
+                                        </li>
+                                        <li  style="cursor:pointer;" id="li-ropt9">
+
+                                            <label style="padding-top:5px;padding-left: 20px; padding-right: 20px;">
+                                                <input id="ropt9"
+                                                       type="radio"
+                                                       name="ropt9"
+                                                       @if (isset($category->icon))
+                                                       {{ $category->icon == 9 ? 'checked' : ''}}
+                                                       @endif
+                                                       value="9"> <img style="margin-left: -25px; width: 32px; height: 32px;" src="{{ asset('/assets/img/9.jpg')  }}" /> Empresas de Produtos e Equipamentos de Tanatopraxia
+                                            </label>
+                                        </li>
+                                    </ul>
                                 </div>
-                            </div>
-                        </div>
 
-                        <input type="hidden" name="readonlydescription" id="readonlydescription" value="0">
-                        <div class="form-group{{ $errors->has('readonlydescription') ? ' has-error' : '' }}">
-                            <div class="col-md-offset-4  checkbox">
-                                <div class="col-md-4">
-                                    <label>
-                                        <input id="readonlydescription"
-                                               type="checkbox"
-                                               name="readonlydescription"
-                                               @if (isset($category->readonlydescription))
-
-                                               {{ $category->readonlydescription == 1 ? 'checked' : ''}}
-                                               @else
-                                               checked
-                                               @endif
-                                               value="1"> Bloqueia descrição
-                                    </label>
-                                </div>
+                                @if ($errors->has('icon'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('icon') }}</strong>
+                                    </span>
+                                @endif
                             </div>
                         </div>
 
@@ -135,7 +224,7 @@
                                     <label>
                                         <input id="isactive" 
                                                type="checkbox" 
-                                               name="isactive" 
+                                               name="isactive"
                                                @if (isset($category->isactive))
                                                                                                         
                                                 {{ $category->isactive == 1 ? 'checked' : ''}}
@@ -161,5 +250,99 @@
         </div>
     </div>
 </div>
+<style type="text/css">
+    input[type=radio] {
+        font-size: 1px!important;
+    }
+</style>
+    <script>
+        (function (window) {
+            $(document).ready( function() {
+                var icon = $('#icon');
+                var ropt1 = $('#ropt1');
+                var ropt2 = $('#ropt2');
+                var ropt3 = $('#ropt3');
+                var ropt4 = $('#ropt4');
+                var ropt5 = $('#ropt5');
+                var ropt6 = $('#ropt6');
+                var ropt7 = $('#ropt7');
+                var ropt8 = $('#ropt8');
+                var ropt9 = $('#ropt9');
+
+
+
+                function clearColor(){
+                    $('#li-ropt1').css({ 'background': '#fff' });
+                    $('#li-ropt2').css({ 'background': '#fff' });
+                    $('#li-ropt3').css({ 'background': '#fff' });
+                    $('#li-ropt4').css({ 'background': '#fff' });
+                    $('#li-ropt5').css({ 'background': '#fff' });
+                    $('#li-ropt6').css({ 'background': '#fff' });
+                    $('#li-ropt7').css({ 'background': '#fff' });
+                    $('#li-ropt8').css({ 'background': '#fff' });
+                    $('#li-ropt9').css({ 'background': '#fff' });
+                }
+
+                function loadPage() {
+                    clearColor();
+                    var i = icon.val();
+                    $('#li-ropt' + i).css({ 'background': '#c7c7c7' });
+                    icon.val(i);
+                }
+                loadPage();
+
+
+
+                ropt1.change(function(){
+                    clearColor();
+                    $('#li-ropt1').css({ 'background': '#c7c7c7' });
+                    icon.val('1');
+                });
+                ropt2.change(function(){
+                    clearColor();
+                    $('#li-ropt2').css({ 'background': '#c7c7c7' });
+                    icon.val('2');
+                });
+                ropt3.change(function(){
+                    clearColor();
+                    $('#li-ropt3').css({ 'background': '#c7c7c7' });
+                    icon.val('3');
+                });
+                ropt4.change(function(){
+                    clearColor();
+                    $('#li-ropt4').css({ 'background': '#c7c7c7' });
+                    icon.val('4');
+                });
+                ropt5.change(function(){
+                    clearColor();
+                    $('#li-ropt5').css({ 'background': '#c7c7c7' });
+                    icon.val('5');
+                });
+                ropt6.change(function(){
+                    clearColor();
+                    $('#li-ropt6').css({ 'background': '#c7c7c7' });
+                    icon.val('6');
+                });
+                ropt7.change(function(){
+                    clearColor();
+                    $('#li-ropt7').css({ 'background': '#c7c7c7' });
+                    icon.val('7');
+                });
+                ropt8.change(function(){
+                    clearColor();
+                    $('#li-ropt8').css({ 'background': '#c7c7c7' });
+                    icon.val('8');
+                });
+                ropt9.change(function(){
+                    clearColor();
+                    $('#li-ropt9').css({ 'background': '#c7c7c7' });
+                    icon.val('9');
+                });
+            });
+
+        }(window));
+    </script>
+
 @endsection
+
 

@@ -44,6 +44,10 @@
                                         <td>{{ $company->im }}</td>
                                     </tr>
                                     <tr>
+                                        <td><b>Contratos:</ b></td>
+                                        <td>{{ $company->getNumContracts() }}</td>
+                                    </tr>
+                                    <tr>
                                         <td><b>Usuário</b></td>
                                         <td>&nbsp;</td>
                                     </tr>
@@ -114,8 +118,26 @@
                                 {{ csrf_field() }}
                                 <button type="submit" class="btn btn-danger">Desabilitar Cadastro</button>
                             </form>
-                        </div>
+                            @foreach($company->companyCategories as $category)
+                                <article class="search-result row" >
+                                    <div class="col-xs-12 col-sm-3 col-md-3" style="padding-top: 20px">
+                                        <img src="{{  $category->category->getMainImage() }}" alt="Image preview"
+                                             class="thumbnail center-thumbnail"
+                                             style="max-width: 140px; max-height: 110px;">
+                                    </div>
+                                    <div class="col-xs-12 col-sm-7 col-md-7" style="padding-top: 30px">
+                                        <h3 ><b class="black-text">{{ ucwords($category->name) }}</b></h3>
+                                        <p class="black-text" ><span>{{ $category->description }} </span></p>
+                                        @if ($category->category->type == 1)
+                                            <p class="black-text"><strong>Numero de contratos: {{ $category->getNumberContract() }}</strong></p>
+                                        @else
+                                            <p class="black-text"><strong>{{ $category->value  }}</strong></p>
+                                        @endif
+                                    </div>
+                                </article>
+                            @endforeach
 
+                        </div>
                     </div>
                 </div>
             </div>

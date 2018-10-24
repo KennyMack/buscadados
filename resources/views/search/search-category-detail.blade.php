@@ -10,7 +10,7 @@
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-md-3 col-sm-12">
-                                <img src="{{ $companyCategory->getMainImage() }}"
+                                <img src="{{ $companyCategory->category->getMainImage() }}"
                                      alt="{{ucwords($companyCategory->name)}}"
                                      class="thumbnail"
                                      id="img-upload"
@@ -44,18 +44,16 @@
                         </div>
                         <div class="col-md-12">
                             @foreach($images as $catimage)
-                                @if($companyCategory->getMainImageId() != $catimage->id)
-                                    <div class="col-md-4 col-sm-6" style="margin-top: 10px; box-sizing: border-box;">
-                                        <div class="col-md-12" style="height: 210px">
-                                            <img src="{{ $catimage->imageurl }}"
-                                                 alt="{{$companyCategory->name}}"
-                                                 class="thumbnail"
-                                                 id="img-upload"
-                                                 style="width: 180px; height: 180px; margin-left: auto;margin-right: auto;">
+                                <div class="col-md-4 col-sm-6" style="margin-top: 10px; box-sizing: border-box;">
+                                    <div class="col-md-12" style="height: 210px">
+                                        <img src="{{ $catimage->imageurl }}"
+                                             alt="{{$companyCategory->name}}"
+                                             class="thumbnail"
+                                             id="img-upload"
+                                             style="width: 180px; height: 180px; margin-left: auto;margin-right: auto;">
 
-                                        </div>
                                     </div>
-                                @endif
+                                </div>
                             @endforeach
                         </div>
                     </div>

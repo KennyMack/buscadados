@@ -12,6 +12,7 @@ use App\Http\Requests\Company\Register\RegisterCompanyCategoryFormRequest;
 use App\Http\Requests\Company\Register\RegisterCompanyFormRequest;
 use App\Http\Requests\CreateCompanyCategoryFormRequest;
 use App\Models\CompanyCatImageModel;
+use App\Parameters;
 use App\User;
 use App\Utils\ImageContent;
 use App\Utils\SendMail;
@@ -154,6 +155,15 @@ class CompanyController extends Controller
 
     public function profileCategory()
     {
+        $param = $this->getParameters();
+
+        $readonlydescription = 0;
+        $readonlyname = 0;
+
+        if ($param != null){
+            $readonlydescription = $param->readonlydescription;
+            $readonlyname = $param->readonlyname;
+        }
 
         $company = Auth::user()->company();
         return view('company.register.category-form', [
@@ -167,6 +177,8 @@ class CompanyController extends Controller
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),
+            'readonlydescription' => $readonlydescription,
+            'readonlyname' => $readonlyname,
         ]);
     }
 
@@ -180,8 +192,34 @@ class CompanyController extends Controller
         $company_id  = Auth::user()->company()->id;
         $category_id  = $request->input('category_id');
         $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
-        $name  = $request->input('name');
-        $description  = $request->input('description');
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+
+        if ($category->type == 1) {
+            $name = $category->name;
+            $description = $category->name;
+        }
+        else {
+            $param = $this->getParameters();
+
+            $readonlydescription = 0;
+            $readonlyname = 0;
+
+            if ($param != null){
+                $readonlydescription = $param->readonlydescription;
+                $readonlyname = $param->readonlyname;
+            }
+
+            if ($readonlydescription == 1) {
+                $description = $categoryDetail->description;
+            }
+
+            if ($readonlyname == 1) {
+                $name = $categoryDetail->name;
+            }
+        }
+
         $value  = $request->input('value');
         $isactive = $request->input('isactive');
         $contract_index = $request->input('contract_index');
@@ -227,8 +265,8 @@ class CompanyController extends Controller
                 }
 
                 $value = 0;
-                $name = 'Contrato';
-                $description = '';
+                // $name = 'Contrato';
+                // $description = '';
             }
         }
 
@@ -271,8 +309,34 @@ class CompanyController extends Controller
 
         $category_id  = $request->input('category_id');
         $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
-        $name  = $request->input('name');
-        $description  = $request->input('description');
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+
+        if ($category->type == 1) {
+            $name = $category->name;
+            $description = $category->name;
+        }
+        else {
+            $param = $this->getParameters();
+
+            $readonlydescription = 0;
+            $readonlyname = 0;
+
+            if ($param != null){
+                $readonlydescription = $param->readonlydescription;
+                $readonlyname = $param->readonlyname;
+            }
+
+            if ($readonlydescription == 1) {
+                $description = $categoryDetail->description;
+            }
+
+            if ($readonlyname == 1) {
+                $name = $categoryDetail->name;
+            }
+        }
+
         $value  = $request->input('value');
         $isactive = $request->input('isactive');
         $contract_index = $request->input('contract_index');
@@ -317,8 +381,8 @@ class CompanyController extends Controller
                 }
 
                 $value = 0;
-                $name = 'Contrato';
-                $description = '';
+                // $name = 'Contrato';
+                // $description = '';
             }
         }
 
@@ -359,7 +423,15 @@ class CompanyController extends Controller
     public function editProfileCategory($idCompanyCategory)
     {
         $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
+        $param = $this->getParameters();
 
+        $readonlydescription = 0;
+        $readonlyname = 0;
+
+        if ($param != null){
+            $readonlydescription = $param->readonlydescription;
+            $readonlyname = $param->readonlyname;
+        }
 
         $company = Auth::user()->company();
 
@@ -375,6 +447,8 @@ class CompanyController extends Controller
             'urlcompany' => url('companies/profile/company'),
             'urladdress' => url('companies/profile/address'),
             'urlcategory' => url('companies/profile/category'),
+            'readonlydescription' => $readonlydescription,
+            'readonlyname' => $readonlyname,
         ]);
     }
 
@@ -452,6 +526,16 @@ class CompanyController extends Controller
 
 
         return Redirect::to('/home');
+    }
+
+    public function getParameters()
+    {
+        $param = Parameters::all();
+
+        if (count($param) > 0)
+            return $param[0];
+
+        return null;
     }
 
     private function getContries()
@@ -680,6 +764,16 @@ class CompanyController extends Controller
     {
 
         $company = Auth::user()->company();
+        $param = $this->getParameters();
+
+        $readonlydescription = 0;
+        $readonlyname = 0;
+
+        if ($param != null){
+            $readonlydescription = $param->readonlydescription;
+            $readonlyname = $param->readonlyname;
+        }
+
         return view('company.register.category-form', [
             'categories' => $this->getCategories(),
             'categoriesdetail' => [],//$this->getCategoriesDetails(),
@@ -691,12 +785,24 @@ class CompanyController extends Controller
             'urlcompany' => '#',
             'urladdress' => '#',
             'urlcategory' => '#',
+            'readonlydescription' => $readonlydescription,
+            'readonlyname' => $readonlyname,
         ]);
     }
 
     public function editRegisterCategory($idCompanyCategory)
     {
         $companyCategory = CompanyCategory::findOrFail($idCompanyCategory);
+        $param = $this->getParameters();
+
+        $readonlydescription = 0;
+        $readonlyname = 0;
+
+        if ($param != null){
+            $readonlydescription = $param->readonlydescription;
+            $readonlyname = $param->readonlyname;
+        }
+
 
 
         $image = $companyCategory->getImage();
@@ -718,6 +824,8 @@ class CompanyController extends Controller
             'urlcompany' => '#',
             'urladdress' => '#',
             'urlcategory' => '#',
+            'readonlydescription' => $readonlydescription,
+            'readonlyname' => $readonlyname,
         ]);
     }
 
@@ -732,8 +840,34 @@ class CompanyController extends Controller
 
         $category_id  = $request->input('category_id');
         $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
-        $name  = $request->input('name');
-        $description  = $request->input('description');
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+
+        if ($category->type == 1) {
+            $name = $category->name;
+            $description = $category->name;
+        }
+        else {
+            $param = $this->getParameters();
+
+            $readonlydescription = 0;
+            $readonlyname = 0;
+
+            if ($param != null){
+                $readonlydescription = $param->readonlydescription;
+                $readonlyname = $param->readonlyname;
+            }
+
+            if ($readonlydescription == 1) {
+                $description = $categoryDetail->description;
+            }
+
+            if ($readonlyname == 1) {
+                $name = $categoryDetail->name;
+            }
+        }
+
         $value  = $request->input('value');
         $isactive = $request->input('isactive');
         $contract_index = $request->input('contract_index');
@@ -778,8 +912,8 @@ class CompanyController extends Controller
                 }
 
                 $value = 0;
-                $name = 'Contrato';
-                $description = '';
+                //$name = 'Contrato';
+                //$description = '';
             }
         }
 
@@ -827,8 +961,35 @@ class CompanyController extends Controller
         $company_id  = Auth::user()->company()->id;
         $category_id  = $request->input('category_id');
         $categorydetail_id  = $request->input('categorydetail_id') === '-1' ? null :$request->input('categorydetail_id');
-        $name  = $request->input('name');
-        $description  = $request->input('description');
+
+        $name = $request->input('name');
+        $description = $request->input('description');
+
+        if ($category->type == 1) {
+            $name = $category->name;
+            $description = $category->name;
+        }
+        else {
+            $param = $this->getParameters();
+
+            $readonlydescription = 0;
+            $readonlyname = 0;
+
+            if ($param != null){
+                $readonlydescription = $param->readonlydescription;
+                $readonlyname = $param->readonlyname;
+            }
+
+            if ($readonlydescription == 1) {
+                $description = $categoryDetail->description;
+            }
+
+            if ($readonlyname == 1) {
+                $name = $categoryDetail->name;
+            }
+        }
+
+
         $value  = $request->input('value');
         $isactive = $request->input('isactive');
         $contract_index = $request->input('contract_index');
@@ -874,8 +1035,8 @@ class CompanyController extends Controller
                 }
 
                 $value = 0;
-                $name = 'Contrato';
-                $description = '';
+                // $name = 'Contrato';
+                // $description = '';
             }
         }
 
@@ -960,7 +1121,6 @@ class CompanyController extends Controller
 
         return Redirect::to('/home');
     }
-
 
     public function adminRemoveCompany($idCompany)
     {

@@ -29,6 +29,7 @@
                                         width="5%">&nbsp;</th>
                                     <th>Razão Social</th>
                                     <th>Nome Fantasia</th>
+                                    <th>Contratos</th>
                                     <th>Status</th>
                                     <th>Cidade</th>
                                     <th>Usuário</th>
@@ -53,6 +54,7 @@
                                         </td>
                                         <td>{{ ucwords($company->companyname) }}</td>
                                         <td>{{ ucwords($company->tradingname) }}</td>
+                                        <td>{{ $company->getNumContracts() }}</td>
                                         <td>{{ $company->getStatus() }}</td>
                                         <td>{{ isset($company->city) ? ucwords($company->city->name) : '' }}</td>
                                         <td>{{ ucwords($company->user->completeName()) }}</td>
@@ -64,7 +66,7 @@
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="8">
+                                    <td colspan="9">
                                         {{ $companies->links() }}
                                     </td>
                                 </tr>
